@@ -4,7 +4,7 @@ EN 600.639: Final Project with Samantha Siow, Michael Norris, Aaron Lerner, and 
 [ ] October 29th - One-page project proposal due
 
 
-# Michael's Roadmap
+## Michael's Roadmap
 This is an attempt to validate the potential for my ideas as a project topic.
 
 I think we can implement a O(nk log(n)) time algorithm for substring matching
