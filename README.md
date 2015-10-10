@@ -23,6 +23,13 @@ http://nar.oxfordjournals.org/content/10/1/133.short
 http://bioinformatics.oxfordjournals.org/content/7/2/143.short
 http://nar.oxfordjournals.org/content/30/14/3059.short
 http://www.sciencedirect.com/science/article/pii/S002001900600250X
+http://publications.csail.mit.edu/lcs/pubs/pdf/MIT-LCS-TM-041.pdf
+http://www.ncbi.nlm.nih.gov/pmc/articles/PMC326121/
+http://dl.acm.org/citation.cfm?id=37191
+http://www.ncbi.nlm.nih.gov/pmc/articles/PMC330830/
+http://nar.oxfordjournals.org/content/18/21/6305.abstract
+http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.123.1883
+http://dl.acm.org/citation.cfm?id=1222507
 
 [Best description of the 1D algorithm]: http://stringpedia.bsmithers.co.uk/index.php?title=FFT_Algorithm_For_Solving_Exact_Pattern_Matching_With_Don%27t_Cares
 
