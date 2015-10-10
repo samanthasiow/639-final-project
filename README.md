@@ -26,22 +26,29 @@ http://www.sciencedirect.com/science/article/pii/S002001900600250X
 
 [Best description of the 1D algorithm]: http://stringpedia.bsmithers.co.uk/index.php?title=FFT_Algorithm_For_Solving_Exact_Pattern_Matching_With_Don%27t_Cares
 
-[ ] Find a sweet dataset or create fake testing dataset
+[] Find a sweet dataset or create fake testing dataset
 
 1-D matching amounts to solving the match-index problem for a single DNA
 sequence.
+
 [ ] Binary encode DNA strings into 1-D array (30 minutes)
+
 [ ] Do FFT's on the arrays, correlate with the template, and combine to create
 the array with the indices (2-5 hours)
+
 [ ] Make cool looking graphics showing matches for paper and presentation.
 
 2-D matching amounts to solving the match-index problem for k DNA sequences and
 a single template t
 [ ] Binary encode DNA strings into 2-D arrays (30 minutes)
+
 [ ] Use OpenCV's template matching algorithm
+
  [ ] Work out the math to determine how to combine the nucleotide arrays to get
      the same arrays for the 1-D case
+
 [ ] make a cool looking heat map for the locations of matches
+
 [ ] Do the same thing as the previous step, but without OpenCV's template
     matching (simple, just use 2-D fft and do explicit cross-correlation between
     the text and the template)
