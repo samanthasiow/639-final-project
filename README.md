@@ -39,7 +39,9 @@ http://nar.oxfordjournals.org/content/18/21/6305.abstract
 
 http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.123.1883
 
-http://dl.acm.org/citation.cfm?id=1222507
+Clifford http://dl.acm.org/citation.cfm?id=1222507
+
+http://www.cs.bris.ac.uk/Publications/Papers/2000602.pdf
 
 [Best description of the 1D algorithm](http://stringpedia.bsmithers.co.uk/index.php?title=FFT_Algorithm_For_Solving_Exact_Pattern_Matching_With_Don%27t_Cares)
 
@@ -63,6 +65,11 @@ a single template t
 
  [ ] Work out the math to determine how to combine the nucleotide arrays to get
      the same arrays for the 1-D case
+ 
+ [ ] Figure out the approximate specificity of the filter based on the fact
+     that we will have to threshold the matches to some level.  Tweak. Rinse
+     repeat.
+ 
 
 [ ] make a cool looking heat map for the locations of matches
 
