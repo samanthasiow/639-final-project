@@ -6,10 +6,10 @@ import numpy as np
 
 def string_to_binary_array(s, size=None):
     #TODO: check dtype for the algorithm
-    A,C,G,T = [np.zeros(len(s) if not size else size) for _ in range(4)]
+    #A,C,G,T = [np.zeros(len(s) if not size else size) for _ in range(4)]
     t = np.zeros(len(s) if not size else size)
     for index, val in enumerate(s):
-        t[index] = ord(val)
+        t[index] = float(ord(val))
 
     return t
 
@@ -53,6 +53,9 @@ def fft_match_index_n_log_n(text, pattern):
         the text
     returns: a list containing the 0-based indices of matches of pattern in text
     '''
+
+    #Note: len(rfft(something)) != len(something) for general case
+
     n = len(text)
     m = len(pattern)
     binary_encoded_text = string_to_binary_array(text)
@@ -65,56 +68,48 @@ def fft_match_index_n_log_n(text, pattern):
 
     binary_encoded_pattern = string_to_binary_array(pattern,size=len(text))
 
+    assert len(binary_encoded_text) == len(binary_encoded_pattern)
+
     pattern = binary_encoded_pattern
     patternSq = pattern * pattern
     patternCube = patternSq * pattern
 
-    textKey = np.fft.fft(text)
-    textSqKey = np.fft.fft(textSq)
-    textCubeKey = np.fft.fft(textCube)
+    textKey = np.fft.rfft(text)
+    textSqKey = np.fft.rfft(textSq)
+    textCubeKey = np.fft.rfft(textCube)
 
-    patternKey = np.fft.fft(pattern)
-    patternSqKey = np.fft.fft(patternSq)
-    patternCubeKey = np.fft.fft(patternCube)
+    patternKey = np.fft.rfft(pattern)
+    patternSqKey = np.fft.rfft(patternSq)
+    patternCubeKey = np.fft.rfft(patternCube)
 
     #there are three terms.  Since fft(key) is Linear, we will IFT each
     #individually
     outTerm1Key = patternCubeKey * textKey
-    #-2 * outTerm2Key?
     outTerm2Key =  patternSqKey * textSqKey
-    outTerm3Key = patternKey * patternCubeKey
+    outTerm3Key = patternKey * textCubeKey
 
-    outTerm1 = np.fft.ifft(outTerm1Key)
-    outTerm2 = -2*np.fft.ifft(outTerm2Key)
-    outTerm3 = np.fft.ifft(outTerm3Key)
+    outTerm1 = np.fft.irfft(outTerm1Key)
+    outTerm2 = -2*np.fft.irfft(outTerm2Key)
+    outTerm3 = np.fft.irfft(outTerm3Key)
 
-    #1D
-    #for i in range(out.shape[0]):
-    #    i = out[i]
-    #    if abs(i.imag) < 1.0e-6 and abs(i.real) < 1.0e-6:
-    #        print i
-    #may need to rotate?
+    #TODO: may need to rotate this
     out = outTerm1 + outTerm2 + outTerm3
 
     #this should be 0 if match
-    print min(abs(out))
-
-    return out
-    #for i in range(n-m):
-    #    index = m+i-1
-    #    temp = outTerm1[index] + outTerm2[index] + outTerm3[index]
-    #    print temp
-    #    if abs(temp) < 1.0e-6:
-    #        print i,temp
-
-    #return out
+    #TODO: figure out the difference between exact and inexact.
+    #I think true matches where 0 and possible matches below this threshold
+    return np.ndarray.tolist(np.where(abs(out) < 1.0e-6))
 
 if __name__ == '__main__':
-    f = open('1d.txt')
-    text = f.read().replace('\n', '')
-    pattern = 'ACG'
+    #f = open('1d.txt')
+    #text = f.read().replace('\n', '')
+    #pattern = 'ACG'
+    #text = "ABCDABCDABCDABCD"
+    #pattern = "ABCD"
+    text = "ABCD"
+    pattern = "D"
 
     out = fft_match_index_n_log_n(text, pattern)
-    print out, naive_string_match_index(text, pattern)
-    assert out == naive_string_match_index(text, pattern)
-    #print(out)
+    #print out, naive_string_match_index(text, pattern)
+    #assert out == naive_string_match_index(text, pattern)
+    print(out)
