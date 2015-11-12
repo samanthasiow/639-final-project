@@ -98,7 +98,7 @@ def fft_match_index_n_log_n(text, pattern):
     #this should be 0 if match
     #TODO: figure out the difference between exact and inexact.
     #I think true matches where 0 and possible matches below this threshold
-    return np.ndarray.tolist(np.where(abs(out) < 1.0e-6))
+    return np.ndarray.tolist(np.where(abs(out) < 1.0e-6)[0])
 
 if __name__ == '__main__':
     #f = open('1d.txt')
