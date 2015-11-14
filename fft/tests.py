@@ -39,11 +39,25 @@ class FFTStringMatchTestRig(unittest.TestCase):
             self.assertTrue(func(text=text,pattern=pattern) == output)
 
     def test_single_char_no_occurrence(self):
-        self.assertTrue(False)
+        func = fftmatch.naive_string_match_index
+        text = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        pattern = "#"
+        self.assertTrue(len(func(text=text,pattern=pattern))==0)
 
     def test_multi_char_no_occurrence(self):
-        self.assertTrue(False)
+        func = fftmatch.naive_string_match_index
+        text = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        pattern = "CE"
+        self.assertTrue(len(func(text=text,pattern=pattern))==0)
 
+    def test_multi_char_multiple_occurrence(self):
+        func = fftmatch.naive_string_match_index
+
+        text = "AAABBACDDCDCBAADA"
+        patterns = [text[i:i+3] for i in range(len(text)-3+1)]
+
+        for index, pattern in enumerate(patterns):
+            self.assertTrue(func(text=text,pattern=pattern)==[index])
 
 if __name__ == '__main__':
     unittest.main()
