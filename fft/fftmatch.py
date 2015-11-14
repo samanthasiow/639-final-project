@@ -32,7 +32,7 @@ def naive_string_match_index(text, pattern):
             matches.append(i)
     return matches
 
-def fft_match_index_n_log_n(text, pattern):
+def fft_match_index(text, pattern, n, m, indexOffset):
     '''Does the n log n FFT pattern matching algorithm.  This solves the match
     index problem by returning a list of indices where the pattern matches the
     text.
@@ -58,8 +58,6 @@ def fft_match_index_n_log_n(text, pattern):
 
     pattern = pattern[::-1]
 
-    n = len(text)
-    m = len(pattern)
     binary_encoded_text = string_to_binary_array(text)
 
     #TODO: for binary_encoded_text and pattern, if the char is equal to the
@@ -68,7 +66,7 @@ def fft_match_index_n_log_n(text, pattern):
     textSq = text * text
     textCube = textSq * text
 
-    binary_encoded_pattern = string_to_binary_array(pattern,size=len(text))
+    binary_encoded_pattern = string_to_binary_array(pattern,size=n)
 
     assert len(binary_encoded_text) == len(binary_encoded_pattern)
 
@@ -104,7 +102,24 @@ def fft_match_index_n_log_n(text, pattern):
 
     #this is actually rotated based on the end of the string, so we need to
     #subtract m-i-1
-    return np.subtract(match_values, m-1)
+    return np.subtract(match_values, m-indexOffset-1)
+
+def n_log_m_fft_match(text, pattern):
+    n = len(text)
+    m = len(pattern)
+    start = 0
+
+    n_log_m_out = []
+
+    while start < n-m:
+        textPortion = text[:m*2]
+        index = fft_match_index(textPortion,pattern,m*2,m,start)
+        for i in index:
+            n_log_m_out.append(i)
+        text += str(m)
+        start += m
+    n_log_m_out = np.unique(np.asarray(out))
+    print n_log_m_out
 
 if __name__ == '__main__':
     #f = open('1d.txt')
@@ -115,7 +130,8 @@ if __name__ == '__main__':
     #pattern = "A"
     #pattern = "ABCD"
 
-    out = fft_match_index_n_log_n(text, pattern)
+    out = fft_match_index(text, pattern, len(text), len(pattern),0)
+    print out
+
     #print out, naive_string_match_index(text, pattern)
     #assert out == naive_string_match_index(text, pattern)
-    print(out)
