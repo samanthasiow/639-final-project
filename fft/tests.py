@@ -22,7 +22,8 @@ oned_string_matching_algorithms = [fftmatch.naive_string_match_index,
                               #fftmatch.fft_match_index_n_log_m]
 
 #algorithms that match multiple genomes to a single substring
-twod_string_matching_algorithms = [fftmatch.fft_match_index_n_sq_log_n]
+twod_string_matching_algorithms = [fftmatch.fft_match_index_n_sq_log_n,
+                                   fftmatch.fft_match_index_n_sq_log_m]
 class FFTStringMatchTestRig(unittest.TestCase):
     @string_match_decorator(oned_string_matching_algorithms)
     def test_single_char_single_occurrence(self, func):
@@ -98,7 +99,6 @@ class MultiGenomeTestRig(unittest.TestCase):
 
         for i in range(len(patterns)):
             self.assertTrue((func(texts, patterns[i]) == expected_outputs[i]).all())
-
 
 
 if __name__ == '__main__':
