@@ -38,7 +38,7 @@ def fft_match_index(text, pattern, n, m, indexOffset):
     text.
 
     Does cross-correlation solving the following equation:
-    S_{i} = \Sigma_{j=1}^{m} (p_{j}^{3} t_{i+j-1} - 2p_{j}^{2}t_{i+j-1}^{2}
+    S_{i} = \sum_{j=1}^{m} (p_{j}^{3} t_{i+j-1} - 2p_{j}^{2}t_{i+j-1}^{2}
                               + p_{j}t_{i+j-1}^{3})
     This can be solved in Fourier space using FFT's of each of the three terms.
 
