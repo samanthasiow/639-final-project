@@ -108,6 +108,17 @@ def fft_match_index(text, pattern, n, m, indexOffset):
     return np.subtract(match_values, m-indexOffset-1)
 
 def fft_match_index_n_log_m(text, pattern):
+    '''Does the n log n FFT pattern matching algorithm.
+
+    arguments:
+      text: the text that you are interested in searching
+      pattern: the pattern that may be contained in multiple locations inside
+        the text
+    returns: a list containing the 0-based indices of matches of pattern in text
+    '''
+    return fft_match_index(text, pattern, len(text), len(pattern),0)
+
+def fft_match_index_n_log_m(text, pattern):
     '''Does the n log m FFT pattern matching algorithm.
 
     arguments:
@@ -130,7 +141,7 @@ def fft_match_index_n_log_m(text, pattern):
         text += str(m)
         start += m
     n_log_m_out = np.unique(np.asarray(out))
-    print n_log_m_out
+    return n_log_m_out
 
 def fft_match_index_n_sq_log_n(texts, pattern):
     '''Does the n_log_n match fft match index algorithm on k texts.
