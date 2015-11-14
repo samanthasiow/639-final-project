@@ -23,14 +23,15 @@ def naive_string_match_index(text, pattern):
       text: the text that you are interested in find
       pattern: the pattern that may be contained in multiple locations inside
         the text
-    returns: a list containing the 0-based indices of matches of pattern in text
+    returns: a numpy array containing the 0-based indices of matches of pattern
+             in text
     '''
     pattern_len = len(pattern)
     matches = []
     for i in range(len(text)-len(pattern)+1):
         if text[i:i+pattern_len] == pattern:
             matches.append(i)
-    return matches
+    return np.array(matches)
 
 def fft_match_index(text, pattern, n, m, indexOffset):
     '''Does the n log n FFT pattern matching algorithm.  This solves the match
@@ -173,9 +174,9 @@ if __name__ == '__main__':
     #f = open('1d.txt')
     #text = f.read().replace('\n', '')
     #pattern = 'ACG'
-    text = "ABCDABCDABCDABCD"
+    #text = "ABCDABCDABCDABCD"
     pattern = "ABCD"
-    #pattern = "A"
+    pattern = "A"
     #pattern = "ABCD"
 
     out = fft_match_index_n_log_m(text, pattern)
