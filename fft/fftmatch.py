@@ -48,9 +48,12 @@ def fft_match_index(text, pattern, n, m, indexOffset):
     TODO: cite papers
 
     arguments:
-      text: the text that you are interested in find
+      text: the text that you are interested in searching
       pattern: the pattern that may be contained in multiple locations inside
         the text
+      n: the length of the text
+      m: the length of the pattern
+      indexOffset: offset to start from
     returns: a list containing the 0-based indices of matches of pattern in text
     '''
 
@@ -104,7 +107,15 @@ def fft_match_index(text, pattern, n, m, indexOffset):
     #subtract m-i-1
     return np.subtract(match_values, m-indexOffset-1)
 
-def n_log_m_fft_match(text, pattern):
+def fft_match_index_n_log_m(text, pattern):
+    '''Does the n log m FFT pattern matching algorithm.
+
+    arguments:
+      text: the text that you are interested in searching
+      pattern: the pattern that may be contained in multiple locations inside
+        the text
+    returns: a list containing the 0-based indices of matches of pattern in text
+    '''
     n = len(text)
     m = len(pattern)
     start = 0
@@ -122,7 +133,19 @@ def n_log_m_fft_match(text, pattern):
     print n_log_m_out
 
 def fft_match_index_n_sq_log_n(texts, pattern):
-    return np.array([fft_match_index_n_log_n(i, pattern) for i in texts])
+    return np.array([fft_match_index(i, pattern) for i in texts])
+
+def fft_match_index_n_sq_log_m(texts, pattern):
+    '''Does the n log m FFT pattern matching algorithm on an array of text.
+
+    arguments:
+      texts: an array of the texts that you are interested in searching
+      pattern: the pattern that may be contained in multiple locations inside
+        the texts
+    returns: an array of lists containing the 0-based indices of matches of the
+        pattern in each text.
+    '''
+    return np.array([fft_match_index_n_log_m(i, pattern) for i in texts])
 
 if __name__ == '__main__':
     #f = open('1d.txt')
