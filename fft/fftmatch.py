@@ -140,7 +140,7 @@ def fft_match_index_n_log_m(text, pattern):
             n_log_m_out.append(i)
         text += str(m)
         start += m
-    n_log_m_out = np.unique(np.asarray(out))
+    n_log_m_out = np.unique(np.asarray(n_log_m_out))
     return n_log_m_out
 
 def fft_match_index_n_sq_log_n(texts, pattern):
@@ -178,7 +178,7 @@ if __name__ == '__main__':
     #pattern = "A"
     #pattern = "ABCD"
 
-    out = fft_match_index(text, pattern, len(text), len(pattern),0)
+    out = fft_match_index_n_log_m(text, pattern)
     print out
 
     #print out, naive_string_match_index(text, pattern)
