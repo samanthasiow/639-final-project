@@ -106,6 +106,8 @@ def fft_match_index(text, pattern, n, m, indexOffset):
 
     #this is actually rotated based on the end of the string, so we need to
     #subtract m-i-1
+    print 'm, indexOffset', m, indexOffset, m-indexOffset-1
+    print match_values
     return np.subtract(match_values, m-indexOffset-1)
 
 def fft_match_index_n_log_n(text, pattern):
@@ -175,7 +177,7 @@ if __name__ == '__main__':
     #text = f.read().replace('\n', '')
     #pattern = 'ACG'
     #text = "ABCDABCDABCDABCD"
-    pattern = "ABCD"
+    text = "ABCD"
     pattern = "A"
     #pattern = "ABCD"
 
