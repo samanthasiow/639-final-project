@@ -129,16 +129,28 @@ def fft_match_index_n_log_m(text, pattern):
     '''
     n = len(text)
     m = len(pattern)
+    # if n == m:
+    #    if text == pattern:
+    #        return np.array([0])
+    #    else:
+    #        return np.array([])
     start = 0
 
     n_log_m_out = []
 
     while start < n-m:
         textPortion = text[:m*2]
+        if len(textPortion) < m*2:
+            i = len(textPortion)
+            while i < m*2:
+                textPortion += '0'
+                i += 1
+        print 'starting index', start, textPortion, text
         index = fft_match_index(textPortion,pattern,m*2,m,start)
+        print index
         for i in index:
             n_log_m_out.append(i)
-        text += str(m)
+        text = text [m:]
         start += m
     n_log_m_out = np.unique(np.asarray(n_log_m_out))
     return n_log_m_out
@@ -173,8 +185,8 @@ if __name__ == '__main__':
     #f = open('1d.txt')
     #text = f.read().replace('\n', '')
     #pattern = 'ACG'
-    text = "ABCDABCDABCDABCD"
-    pattern = "ABCD"
+    text = "ABCDABCDABCDABCDABCD"
+    pattern = "ABC"
     #pattern = "A"
     #pattern = "ABCD"
 
