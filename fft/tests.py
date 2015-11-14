@@ -68,7 +68,7 @@ class FFTStringMatchTestRig(unittest.TestCase):
         self.assertTrue(len(func(text=text,pattern=pattern))==0)
 
     @string_match_decorator(oned_string_matching_algorithms)
-    def test_multi_char_multiple_occurrence(self, func):
+    def test_multi_char_single_occurrence(self, func):
         text = "AAABBACDDCDCBAADA"
         patterns = [text[i:i+3] for i in range(len(text)-3+1)]
 
@@ -76,6 +76,21 @@ class FFTStringMatchTestRig(unittest.TestCase):
             self.assertTrue(
                 (func(text=text,pattern=pattern)==np.array([index])).all()
             )
+
+    @string_match_decorator(oned_string_matching_algorithms)
+    def test_multi_char_multiple_occurrence(self, func):
+        text = "AAABBACDDCDCBAADC"
+        patterns = [text[i:i+3] for i in range(len(text)-3+1)]
+        half_len = len(text)
+        text *= 2
+
+        for index, pattern in enumerate(patterns):
+            self.assertTrue(
+                (func(text=text,pattern=pattern) == \
+                    np.array([index,index+half_len])).all()
+            )
+
+
 
 class MultiGenomeTestRig(unittest.TestCase):
     @string_match_decorator(twod_string_matching_algorithms)
