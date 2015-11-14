@@ -126,7 +126,9 @@ def fft_match_index_n_log_n(text, pattern):
     return fft_match_index(text, pattern, len(text), len(pattern),0)
 
 def fft_match_index_n_log_m(text, pattern):
-    '''Does the n log m FFT pattern matching algorithm.
+    '''Does the n log m FFT pattern matching algorithm. If the length of the
+    portion of the text that we're sampling is less than the length of the
+    pattern, we pad the end with 0s. Change this if 0s are in the alphabet.
 
     arguments:
       text: the text that you are interested in searching
@@ -147,15 +149,9 @@ def fft_match_index_n_log_m(text, pattern):
     n_log_m_out = []
 
     while start < n-m:
-        textPortion = text[:m*2]
-        if len(textPortion) < m*2:
-            i = len(textPortion)
-            # pad the rest of the text portion with 0s
-            # NOTE: This is assuming that 0s are not in our alphabet
-            while i < m*2:
-                textPortion += '0'
-                i += 1
+        textPortion = text[:m*2].ljust(m*2,'0')
         index = fft_match_index(textPortion,pattern,m*2,m,start)
+        print textPortion, index
         for i in index:
             n_log_m_out.append(i)
         text = text [m:]
@@ -194,8 +190,8 @@ if __name__ == '__main__':
     #text = f.read().replace('\n', '')
     #pattern = 'ACG'
     #text = "ABCDABCDABCDABCD"
-    text = "ABCD"
-    pattern = "A"
+    text = "AAABBACDDCDCBAADA"
+    pattern = "AAA"
 
     out = fft_match_index_n_log_m(text, pattern)
     print out
