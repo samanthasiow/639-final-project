@@ -33,7 +33,7 @@ def naive_string_match_index(text, pattern):
             matches.append(i)
     return np.array(matches)
 
-def fft_match_index(text, pattern, n, m, indexOffset):
+def fft_match_index(text, pattern, n, m):
     '''Does the n log n FFT pattern matching algorithm.  This solves the match
     index problem by returning a list of indices where the pattern matches the
     text.
@@ -106,7 +106,7 @@ def fft_match_index(text, pattern, n, m, indexOffset):
 
     #this is actually rotated based on the end of the string, so we need to
     #subtract m-i-1
-    matches = np.subtract(matches, m-indexOffset-1)
+    matches = np.subtract(matches, m-1)
 
     #since the FFT works on the unit circle, we can actually get matches that
     #start at the end of the string and end at the beginning.  This doesn't
@@ -123,7 +123,7 @@ def fft_match_index_n_log_n(text, pattern):
         the text
     returns: a list containing the 0-based indices of matches of pattern in text
     '''
-    return fft_match_index(text, pattern, len(text), len(pattern),0)
+    return fft_match_index(text, pattern, len(text), len(pattern))
 
 def fft_match_index_n_log_m(text, pattern):
     '''Does the n log m FFT pattern matching algorithm. If the length of the
@@ -150,11 +150,10 @@ def fft_match_index_n_log_m(text, pattern):
 
     while start < n-m:
         textPortion = text[:m*2].ljust(m*2,'0')
-        index = fft_match_index(textPortion,pattern,m*2,m,start)
-        print textPortion, index
+        index = fft_match_index(textPortion,pattern,m*2,m)
         for i in index:
-            n_log_m_out.append(i)
-        text = text [m:]
+            n_log_m_out.append(i+start)
+        text = text[m:]
         start += m
     n_log_m_out = np.unique(np.asarray(n_log_m_out))
     return n_log_m_out
@@ -171,7 +170,7 @@ def fft_match_index_n_sq_log_n(texts, pattern):
     returns: a list containing the 0-based indices of matches of pattern in text
 
     '''
-    return np.array([fft_match_index(i, pattern, len(i), len(pattern),0) for i in texts])
+    return np.array([fft_match_index(i, pattern, len(i), len(pattern)) for i in texts])
 
 def fft_match_index_n_sq_log_m(texts, pattern):
     '''Does the n log m FFT pattern matching algorithm on an array of text.
@@ -191,7 +190,7 @@ if __name__ == '__main__':
     #pattern = 'ACG'
     #text = "ABCDABCDABCDABCD"
     text = "AAABBACDDCDCBAADA"
-    pattern = "AAA"
+    pattern = 'DBB'
 
     out = fft_match_index_n_log_m(text, pattern)
     print out
