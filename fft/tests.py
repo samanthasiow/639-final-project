@@ -19,7 +19,7 @@ def string_match_decorator(string_matching_algorithms):
 #algorithms that match a single genome to a single substring
 oned_string_matching_algorithms = [fftmatch.naive_string_match_index,
                               fftmatch.fft_match_index_n_log_n]
-                              #fftmatch.fft_match_index_n_log_m]
+                              fftmatch.fft_match_index_n_log_m]
 
 #algorithms that match multiple genomes to a single substring
 twod_string_matching_algorithms = [fftmatch.fft_match_index_n_sq_log_n,
