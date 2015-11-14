@@ -122,6 +122,17 @@ def n_log_m_fft_match(text, pattern):
     print n_log_m_out
 
 def fft_match_index_n_sq_log_n(texts, pattern):
+    '''Does the n_log_n match fft match index algorithm on k texts.
+
+    The running time of this algorithm is k*n\log{n}
+
+    arguments:
+      text: a list of the texts that you are interested in searching
+      pattern: the pattern that may be contained in multiple locations inside
+        the text
+    returns: a list containing the 0-based indices of matches of pattern in text
+    
+    '''
     return np.array([fft_match_index_n_log_n(i, pattern) for i in texts])
 
 if __name__ == '__main__':
