@@ -144,7 +144,7 @@ def fft_match_index_n_sq_log_n(texts, pattern):
     returns: a list containing the 0-based indices of matches of pattern in text
 
     '''
-    return np.array([fft_match_index(i, pattern) for i in texts])
+    return np.array([fft_match_index(i, pattern, len(i), len(pattern),0) for i in texts])
 
 def fft_match_index_n_sq_log_m(texts, pattern):
     '''Does the n log m FFT pattern matching algorithm on an array of text.
