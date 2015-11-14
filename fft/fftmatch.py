@@ -56,6 +56,8 @@ def fft_match_index_n_log_n(text, pattern):
 
     #Note: len(rfft(something)) != len(something) for general case
 
+    pattern = pattern[::-1]
+
     n = len(text)
     m = len(pattern)
     binary_encoded_text = string_to_binary_array(text)
@@ -98,16 +100,20 @@ def fft_match_index_n_log_n(text, pattern):
     #this should be 0 if match
     #TODO: figure out the difference between exact and inexact.
     #I think true matches where 0 and possible matches below this threshold
-    return np.ndarray.tolist(np.where(abs(out) < 1.0e-6)[0])
+    match_values = np.ndarray.tolist(np.where(abs(out) < 1.0e-6)[0])
+
+    #this is actually rotated based on the end of the string, so we need to
+    #subtract m-i-1
+    return np.subtract(match_values, m-1)
 
 if __name__ == '__main__':
     #f = open('1d.txt')
     #text = f.read().replace('\n', '')
     #pattern = 'ACG'
-    #text = "ABCDABCDABCDABCD"
+    text = "ABCDABCDABCDABCD"
+    pattern = "ABCD"
+    #pattern = "A"
     #pattern = "ABCD"
-    text = "ABCD"
-    pattern = "D"
 
     out = fft_match_index_n_log_n(text, pattern)
     #print out, naive_string_match_index(text, pattern)
