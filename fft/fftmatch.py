@@ -107,7 +107,7 @@ def fft_match_index(text, pattern, n, m, indexOffset):
     #subtract m-i-1
     return np.subtract(match_values, m-indexOffset-1)
 
-def fft_match_index_n_log_m(text, pattern):
+def fft_match_index_n_log_n(text, pattern):
     '''Does the n log n FFT pattern matching algorithm.
 
     arguments:
