@@ -106,6 +106,9 @@ def fft_match_index_n_log_n(text, pattern):
     #subtract m-i-1
     return np.subtract(match_values, m-1)
 
+def fft_match_index_n_sq_log_n(texts, pattern):
+    return np.array([fft_match_index_n_log_n(i, pattern) for i in texts])
+
 if __name__ == '__main__':
     #f = open('1d.txt')
     #text = f.read().replace('\n', '')
