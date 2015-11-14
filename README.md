@@ -45,14 +45,14 @@ Clifford's Paper http://www.cs.bris.ac.uk/Publications/Papers/2000602.pdf
 
 [Best description of the 1D algorithm](http://stringpedia.bsmithers.co.uk/index.php?title=FFT_Algorithm_For_Solving_Exact_Pattern_Matching_With_Don%27t_Cares)
 
-[] Find a sweet dataset or create fake testing dataset
+[ ] Find a sweet dataset or create fake testing dataset
 
 1-D matching amounts to solving the match-index problem for a single DNA
 sequence.
 
-[ ] Binary encode DNA strings into 1-D array (30 minutes)
+[x] Binary encode DNA strings into 1-D array (30 minutes)
 
-[ ] Do FFT's on the arrays, correlate with the template, and combine to create
+[x] Do FFT's on the arrays, correlate with the template, and combine to create
 the array with the indices (2-5 hours)
 
 [ ] Make cool looking graphics showing matches for paper and presentation.
