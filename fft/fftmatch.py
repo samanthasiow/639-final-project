@@ -102,13 +102,17 @@ def fft_match_index(text, pattern, n, m, indexOffset):
     #this should be 0 if match
     #TODO: figure out the difference between exact and inexact.
     #I think true matches where 0 and possible matches below this threshold
-    match_values = np.ndarray.tolist(np.where(abs(out) < 1.0e-6)[0])
+    matches = np.where(abs(out) < 1.0e-6)[0]
 
     #this is actually rotated based on the end of the string, so we need to
     #subtract m-i-1
-    print 'm, indexOffset', m, indexOffset, m-indexOffset-1
-    print match_values
-    return np.subtract(match_values, m-indexOffset-1)
+    matches = np.subtract(matches, m-indexOffset-1)
+
+    #since the FFT works on the unit circle, we can actually get matches that
+    #start at the end of the string and end at the beginning.  This doesn't
+    #make sense for DNA so we are going to remove all matches whose index
+    #is less than 0.  These are the matches that span the end-start boundary
+    return matches[matches >= 0]
 
 def fft_match_index_n_log_n(text, pattern):
     '''Does the n log n FFT pattern matching algorithm.
