@@ -129,11 +129,12 @@ def fft_match_index_n_log_m(text, pattern):
     '''
     n = len(text)
     m = len(pattern)
-    # if n == m:
-    #    if text == pattern:
-    #        return np.array([0])
-    #    else:
-    #        return np.array([])
+
+    if n == m:
+       if text == pattern:
+           return np.array([0])
+       else:
+           return np.array([])
     start = 0
 
     n_log_m_out = []
@@ -142,12 +143,12 @@ def fft_match_index_n_log_m(text, pattern):
         textPortion = text[:m*2]
         if len(textPortion) < m*2:
             i = len(textPortion)
+            # pad the rest of the text portion with 0s
+            # NOTE: This is assuming that 0s are not in our alphabet
             while i < m*2:
                 textPortion += '0'
                 i += 1
-        print 'starting index', start, textPortion, text
         index = fft_match_index(textPortion,pattern,m*2,m,start)
-        print index
         for i in index:
             n_log_m_out.append(i)
         text = text [m:]
@@ -186,7 +187,7 @@ if __name__ == '__main__':
     #text = f.read().replace('\n', '')
     #pattern = 'ACG'
     text = "ABCDABCDABCDABCDABCD"
-    pattern = "ABC"
+    pattern = "A"
     #pattern = "A"
     #pattern = "ABCD"
 
