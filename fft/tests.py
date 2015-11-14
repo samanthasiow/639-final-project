@@ -4,18 +4,33 @@ Unit Tests for fftmatch.naive_string_match_index
 import unittest
 import fftmatch
 import numpy as np
+import functools
 
+def string_match_decorator(string_matching_algorithms):
+    def inner_decorator(function):
+        @functools.wraps(function)
+        def inner_function(self):
+            '''Class method to run string matching algorithms'''
+            for sma in string_matching_algorithms:
+                function(self, sma)
+        return inner_function
+    return inner_decorator
+
+string_matching_algorithms = [fftmatch.naive_string_match_index,
+                              fftmatch.fft_match_index_n_log_n,
+                              fftmatch.fft_match_index_n_log_m]
 class FFTStringMatchTestRig(unittest.TestCase):
-    def test_single_char_single_occurrence(self):
-        func = fftmatch.naive_string_match_index
-
+    @string_match_decorator(string_matching_algorithms)
+    def test_single_char_single_occurrence(self, func):
+        print "running tscso with", func
         text = "ABCD"
         patterns = ["A", "B", "C", "D"]
         expected_outputs = [[0], [1], [2], [3]]
 
         for pattern, expected_output in zip(patterns, expected_outputs):
             output = expected_output
-            self.assertTrue(func(text=text,pattern=pattern) == output)
+            print func(text=text,pattern=pattern)
+            #self.assertTrue((func(text=text,pattern=pattern) == output).all())
 
     def test_single_char_multiple_occurrences(self):
         func = fftmatch.naive_string_match_index
