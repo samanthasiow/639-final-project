@@ -67,37 +67,37 @@ def fft_match_index(text, pattern, n, m):
     #TODO: for binary_encoded_text and pattern, if the char is equal to the
     # don't care character, then set the float value to 0.0
     text = binary_encoded_text
-    textSq = text * text
-    textCube = textSq * text
+    text_sq = text * text
+    text_cube = text_sq * text
 
     binary_encoded_pattern = string_to_binary_array(pattern,size=n)
 
     assert len(binary_encoded_text) == len(binary_encoded_pattern)
 
     pattern = binary_encoded_pattern
-    patternSq = pattern * pattern
-    patternCube = patternSq * pattern
+    pattern_sq = pattern * pattern
+    pattern_cube = pattern_sq * pattern
 
-    textKey = np.fft.rfft(text)
-    textSqKey = np.fft.rfft(textSq)
-    textCubeKey = np.fft.rfft(textCube)
+    text_key = np.fft.rfft(text)
+    text_sq_key = np.fft.rfft(text_sq)
+    text_cube_key = np.fft.rfft(text_cube)
 
-    patternKey = np.fft.rfft(pattern)
-    patternSqKey = np.fft.rfft(patternSq)
-    patternCubeKey = np.fft.rfft(patternCube)
+    pattern_key = np.fft.rfft(pattern)
+    pattern_sq_key = np.fft.rfft(pattern_sq)
+    pattern_cube_key = np.fft.rfft(pattern_cube)
 
     #there are three terms.  Since fft(key) is Linear, we will IFT each
     #individually
-    outTerm1Key = patternCubeKey * textKey
-    outTerm2Key =  patternSqKey * textSqKey
-    outTerm3Key = patternKey * textCubeKey
+    out_term_1_key = pattern_cube_key * text_key
+    out_term_2_key =  pattern_sq_key * text_sq_key
+    out_term_3_key = pattern_key * text_cube_key
 
-    outTerm1 = np.fft.irfft(outTerm1Key)
-    outTerm2 = -2*np.fft.irfft(outTerm2Key)
-    outTerm3 = np.fft.irfft(outTerm3Key)
+    out_term_1 = np.fft.irfft(out_term_1_key)
+    out_term_2 = -2*np.fft.irfft(out_term_2_key)
+    out_term_3 = np.fft.irfft(out_term_3_key)
 
     #TODO: may need to rotate this
-    out = outTerm1 + outTerm2 + outTerm3
+    out = out_term_1 + out_term_2 + out_term_3
 
     #this should be 0 if match
     #TODO: figure out the difference between exact and inexact.
@@ -149,8 +149,8 @@ def fft_match_index_n_log_m(text, pattern):
     n_log_m_out = []
 
     while start < n-m:
-        textPortion = text[:m*2].ljust(m*2,'0')
-        index = fft_match_index(textPortion,pattern,m*2,m)
+        text_portion = text[:m*2].ljust(m*2,'0')
+        index = fft_match_index(text_portion,pattern,m*2,m)
         for i in index:
             n_log_m_out.append(i+start)
         text = text[m:]
