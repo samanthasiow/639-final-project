@@ -1,6 +1,7 @@
 import fftmatch as fft
 import boyermoore as bm
 import argparse
+import collections
 
 parser = argparse.ArgumentParser(description='Search for a substring in a \
 genome')
@@ -31,19 +32,24 @@ for genome_fn in args.genomes:
             genome += line.rstrip()
     genomes[title] = genome
 
+sorted_genomes = collections.OrderedDict(sorted(genomes.items(),
+                                      key=lambda t: t[0]))
+genome_strings = sorted_genomes.values()
+genome_titles = sorted_genomes.keys()
+
 # Parse args
 if args.algorithm == 'nlogn':
-    for gn in genomes:
-        matches = fft.fft_match_index_n_log_n(genomes[gn], args.pattern[0])
-        print gn, ': Found matches at indices', matches
+    matches = fft.fft_match_index_n_sq_log_n(genome_strings, args.pattern[0])
+    for i,match in enumerate(matches):
+        print genome_titles[i], ': Found matches at indices', match
     pass
 elif args.algorithm == 'nlogm':
-    for gn in genomes:
-        matches = fft.fft_match_index_n_log_m(genomes[gn], args.pattern[0])
-        print gn, ': Found matches at indices', matches
+    matches = fft.fft_match_index_n_sq_log_m(genome_strings, args.pattern[0])
+    for i,match in enumerate(matches):
+        print genome_titles[i], ': Found matches at indices', match
     pass
 elif args.algorithm == 'boyermoore':
-    for gn in genomes:
-        matches = bm.boyer_moore_match_index(genomes[gn], args.pattern[0])
-        print gn, ': Found matches at indices', matches
+    matches = bm.boyer_moore_mult_match_index(genome_strings, args.pattern[0])
+    for i,match in enumerate(matches):
+        print genome_titles[i], ': Found matches at indices', match
     pass
