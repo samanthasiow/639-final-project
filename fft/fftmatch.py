@@ -125,17 +125,28 @@ def fft_match_index_n_log_n(text, pattern):
     '''
     return fft_match_index(text, pattern, len(text), len(pattern))
 
-def fft_match_index_n_log_m(text, pattern):
+def fft_match_index_n_log_m(text, pattern, break_size='m'):
     '''Does the n log m FFT pattern matching algorithm. If the length of the
     portion of the text that we're sampling is less than the length of the
     pattern, we pad the end with 0s. Change this if 0s are in the alphabet.
 
-    arguments:
+    Arguments
+    ---------
       text: the text that you are interested in searching
       pattern: the pattern that may be contained in multiple locations inside
         the text
+    break_size : type str or int
+        if 'm', it will use the standard algorithm for the n log m algorithm,
+            which breaks the string into 2m size chunks and performs the
+            fft match index algorithm on those chunks
+        if a positive integer, it will break up the string into size 
+            2*break_size chunks
+
     returns: a list containing the 0-based indices of matches of pattern in text
     '''
+    if not (break_size == 'm' or ((type(break_size) == int) and break_size>0)):
+        raise Exception('fft_match_index_n_log_m break_size must be str or \
+positive integer')
     n = len(text)
     m = len(pattern)
 
@@ -148,13 +159,16 @@ def fft_match_index_n_log_m(text, pattern):
 
     n_log_m_out = []
 
-    while start < n-m:
-        text_portion = text[:m*2].ljust(m*2,'0')
-        index = fft_match_index(text_portion,pattern,m*2,m)
+    if break_size == 'm':
+        break_size = m
+
+    while start < n-break_size:
+        text_portion = text[:break_size*2].ljust(break_size*2,'0')
+        index = fft_match_index(text_portion,pattern,break_size*2,break_size)
         for i in index:
             n_log_m_out.append(i+start)
-        text = text[m:]
-        start += m
+        text = text[break_size:]
+        start += break_size
     n_log_m_out = np.unique(np.asarray(n_log_m_out))
     return n_log_m_out
 
