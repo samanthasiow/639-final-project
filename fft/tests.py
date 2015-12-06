@@ -35,7 +35,8 @@ class FFTStringMatchTestRig(unittest.TestCase):
 
         for pattern, expected_output in zip(patterns, expected_outputs):
             output = expected_output
-            #self.assertTrue((func(text=text,pattern=pattern) == output).all())
+            self.assertTrue((func(text=text,pattern=pattern) == output).all())
+
 
     @string_match_decorator(oned_string_matching_algorithms)
     def test_single_char_multiple_occurrences(self, func):
@@ -114,7 +115,6 @@ class MultiGenomeTestRig(unittest.TestCase):
 
         for i in range(len(patterns)):
             self.assertTrue((func(texts, patterns[i]) == expected_outputs[i]).all())
-
 
 if __name__ == '__main__':
     unittest.main()
