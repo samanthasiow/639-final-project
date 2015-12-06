@@ -125,7 +125,7 @@ def fft_match_index_n_log_n(text, pattern):
     '''
     return fft_match_index(text, pattern, len(text), len(pattern))
 
-def fft_match_index_n_log_m(text, pattern, break_size='m'):
+def fft_match_index_n_log_m(text, pattern, chunk_size='m'):
     '''Does the n log m FFT pattern matching algorithm. If the length of the
     portion of the text that we're sampling is less than the length of the
     pattern, we pad the end with 0s. Change this if 0s are in the alphabet.
@@ -135,17 +135,17 @@ def fft_match_index_n_log_m(text, pattern, break_size='m'):
       text: the text that you are interested in searching
       pattern: the pattern that may be contained in multiple locations inside
         the text
-    break_size : type str or int
+    chunk_size : type str or int
         if 'm', it will use the standard algorithm for the n log m algorithm,
             which breaks the string into 2m size chunks and performs the
             fft match index algorithm on those chunks
         if a positive integer, it will break up the string into size 
-            2*break_size chunks
+            2*chunk_size chunks
 
     returns: a list containing the 0-based indices of matches of pattern in text
     '''
-    if not (break_size == 'm' or ((type(break_size) == int) and break_size>0)):
-        raise Exception('fft_match_index_n_log_m break_size must be str or \
+    if not (chunk_size == 'm' or ((type(chunk_size) == int) and chunk_size>0)):
+        raise Exception('fft_match_index_n_log_m chunk_size must be str or \
 positive integer')
     n = len(text)
     m = len(pattern)
@@ -159,16 +159,16 @@ positive integer')
 
     n_log_m_out = []
 
-    if break_size == 'm':
-        break_size = m
+    if chunk_size == 'm':
+        chunk_size = m
 
-    while start < n-break_size:
-        text_portion = text[:break_size*2].ljust(break_size*2,'0')
-        index = fft_match_index(text_portion,pattern,break_size*2,break_size)
+    while start < n-chunk_size:
+        text_portion = text[:chunk_size*2].ljust(chunk_size*2,'0')
+        index = fft_match_index(text_portion,pattern,chunk_size*2,chunk_size)
         for i in index:
             n_log_m_out.append(i+start)
-        text = text[break_size:]
-        start += break_size
+        text = text[chunk_size:]
+        start += chunk_size
     n_log_m_out = np.unique(np.asarray(n_log_m_out))
     return n_log_m_out
 
