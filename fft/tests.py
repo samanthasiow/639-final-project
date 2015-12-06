@@ -28,6 +28,7 @@ oned_string_matching_algorithms = [fftmatch.naive_string_match_index,
 twod_string_matching_algorithms = [fftmatch.fft_match_index_n_sq_log_n,
                                    fftmatch.fft_match_index_n_sq_log_m,
                                    cvmatch.cv_match_index]
+
 class FFTStringMatchTestRig(unittest.TestCase):
     @string_match_decorator(oned_string_matching_algorithms)
     def test_single_char_single_occurrence(self, func):
