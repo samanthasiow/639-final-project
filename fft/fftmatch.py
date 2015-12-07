@@ -265,7 +265,6 @@ def fft_match_index_2d(texts, pattern):
     out_term_2 = -2*np.fft.irfft2(out_term_2_key)
     out_term_3 = np.fft.irfft2(out_term_3_key)
 
-    #TODO: may need to rotate this
     out = out_term_1 + out_term_2 + out_term_3
 
     #this should be 0 if match
