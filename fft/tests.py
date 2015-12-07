@@ -110,7 +110,7 @@ class FFTStringMatchTestRig(unittest.TestCase):
                 (func(text=text,pattern=pattern)==np.array([index])).all(),
                 msg=format_error_message(func)
             )
-        self.assertTrue(func(text="AAABC", pattern="BC")==np.array([3]))
+        self.assertTrue(func(text="AAAGC", pattern="GC")==np.array([3]))
 
     @string_match_decorator(oned_string_matching_algorithms)
     def test_multi_char_multiple_occurrence(self, func):
