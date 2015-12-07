@@ -29,6 +29,7 @@ oned_string_matching_algorithms = [fftmatch.naive_string_match_index,
 
 #algorithms that match multiple genomes to a single substring
 twod_string_matching_algorithms = [fftmatch.fft_match_index_n_sq_log_n,
+                                   fftmatch.fft_match_index_n_sq_log_n_naive,
                                    fftmatch.fft_match_index_n_sq_log_m,
                                    cvmatch.cv_match_index]
 
@@ -163,10 +164,10 @@ class MultiGenomeTestRig(unittest.TestCase):
 
     @string_match_decorator(twod_string_matching_algorithms)
     def test_long_stream(self, func):
-        if func == fftmatch.fft_match_index_n_sq_log_n:
-            return #You shall not pass
+        #if func == fftmatch.fft_match_index_n_sq_log_n_naive:
+        #    return #You shall not pass
         np.random.seed(67+2)
-        texts = np.random.choice(list('AGCT'), size=(10000,25)).tolist()
+        texts = np.random.choice(list('AGCT'), size=(10000,31)).tolist()
         texts = [''.join(_list) for _list in texts]
         pattern = ''.join(np.random.choice(list('AGTC'), size=3))
 

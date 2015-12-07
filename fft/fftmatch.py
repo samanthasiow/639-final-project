@@ -172,7 +172,7 @@ positive integer')
     n_log_m_out = np.unique(np.asarray(n_log_m_out))
     return n_log_m_out
 
-def fft_match_index_n_sq_log_n(texts, pattern):
+def fft_match_index_n_sq_log_n_naive(texts, pattern):
     '''Does the n_log_n match fft match index algorithm on k texts.
 
     The running time of this algorithm is k*n\log{n}
@@ -198,16 +198,114 @@ def fft_match_index_n_sq_log_m(texts, pattern):
     '''
     return np.array([fft_match_index_n_log_m(i, pattern) for i in texts])
 
+def fft_match_index_2d(texts, pattern):
+    '''Does the n log n FFT pattern matching algorithm.  This solves the match
+    index problem by returning a list of indices where the pattern matches the
+    text.
+
+    Does cross-correlation solving the following equation:
+    S_{i} = \sum_{j=1}^{m} (p_{j}^{3} t_{i+j-1} - 2p_{j}^{2}t_{i+j-1}^{2}
+                              + p_{j}t_{i+j-1}^{3})
+    This can be solved in Fourier space using FFT's of each of the three terms.
+
+    S_{i} = 0 when there is a match between the pattern and text at that
+    location.
+
+    TODO: cite papers
+
+    arguments:
+      text: the text that you are interested in searching
+      pattern: the pattern that may be contained in multiple locations inside
+        the text
+      n: the length of the text
+      m: the length of the pattern
+      indexOffset: offset to start from
+    returns: a list containing the 0-based indices of matches of pattern in text
+    '''
+
+    #Note: len(rfft(something)) != len(something) for general case
+
+    pattern = pattern[::-1]
+
+    binary_encoded_text = [string_to_binary_array(text) for text in texts]
+    binary_encoded_text = np.array(binary_encoded_text)
+
+    #TODO: for binary_encoded_text and pattern, if the char is equal to the
+    # don't care character, then set the float value to 0.0
+    text = binary_encoded_text
+    text_sq = text * text
+    text_cube = text_sq * text
+
+    m = len(pattern)
+    binary_encoded_pattern = np.zeros(binary_encoded_text.shape)
+    binary_encoded_pattern[0,:] = string_to_binary_array(pattern,
+                                        size=binary_encoded_text.shape[1])
+
+    assert len(binary_encoded_text) == len(binary_encoded_pattern)
+
+    pattern = binary_encoded_pattern
+    pattern_sq = pattern * pattern
+    pattern_cube = pattern_sq * pattern
+
+    text_key = np.fft.rfft2(text)
+    text_sq_key = np.fft.rfft2(text_sq)
+    text_cube_key = np.fft.rfft2(text_cube)
+
+    pattern_key = np.fft.rfft2(pattern)
+    pattern_sq_key = np.fft.rfft2(pattern_sq)
+    pattern_cube_key = np.fft.rfft2(pattern_cube)
+
+    #there are three terms.  Since fft(key) is Linear, we will IFT each
+    #individually
+    out_term_1_key = pattern_cube_key * text_key
+    out_term_2_key =  pattern_sq_key * text_sq_key
+    out_term_3_key = pattern_key * text_cube_key
+
+    out_term_1 = np.fft.irfft2(out_term_1_key)
+    out_term_2 = -2*np.fft.irfft2(out_term_2_key)
+    out_term_3 = np.fft.irfft2(out_term_3_key)
+
+    #TODO: may need to rotate this
+    out = out_term_1 + out_term_2 + out_term_3
+
+    #this should be 0 if match
+    matches = np.where(abs(out) < 1.0e-6)
+
+    out = []
+    #If our array is:
+    # ACGTC
+    # ACGTC
+    # ACGTC
+    # and the pattern is CAC, it will match unless we specifically prevent
+    # it here.
+    #Copies each matching row into a new array, and subtracts (m-1) to get
+    # the correct index
+    for i in range(text.shape[0]):
+        temp = matches[1][np.where(matches[0] ==i)] - (m-1)
+        out.append(temp[temp >= 0])
+    matches = np.array(out)
+    
+    return matches
+
+def fft_match_index_n_sq_log_n(texts, pattern):
+    return fft_match_index_2d(texts, pattern)
+
 if __name__ == '__main__':
     #f = open('1d.txt')
     #text = f.read().replace('\n', '')
     #pattern = 'ACG'
     #text = "ABCDABCDABCDABCD"
-    text = "AAABBACDDCDCBAADA"
-    pattern = 'DBB'
+    #text = "AAABBACDDCDCBAADA"
+    #pattern = 'DBB'
 
-    out = fft_match_index_n_log_m(text, pattern)
-    print out
+    #out = fft_match_index_n_log_m(text, pattern)
+    #print out
 
     #print out, naive_string_match_index(text, pattern)
     #assert out == naive_string_match_index(text, pattern)
+
+    texts = ["AAAB", "ABCD", "AAAB", "AAAB", "AAAB"]
+    pattern = "AB"
+
+    #print fft_match_index_2d(texts, pattern2)
+    print fft_match_index_n_sq_log_n(texts, pattern)
