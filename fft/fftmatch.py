@@ -58,7 +58,7 @@ def fft_match_index(text, pattern, n, m):
     returns: a list containing the 0-based indices of matches of pattern in text
     '''
 
-    #Note: len(rfft(something)) != len(something) for general case
+    #Note: len(fft(something)) != len(something) for general case
 
     pattern = pattern[::-1]
 
@@ -78,13 +78,13 @@ def fft_match_index(text, pattern, n, m):
     pattern_sq = pattern * pattern
     pattern_cube = pattern_sq * pattern
 
-    text_key = np.fft.rfft(text)
-    text_sq_key = np.fft.rfft(text_sq)
-    text_cube_key = np.fft.rfft(text_cube)
+    text_key = np.fft.fft(text)
+    text_sq_key = np.fft.fft(text_sq)
+    text_cube_key = np.fft.fft(text_cube)
 
-    pattern_key = np.fft.rfft(pattern)
-    pattern_sq_key = np.fft.rfft(pattern_sq)
-    pattern_cube_key = np.fft.rfft(pattern_cube)
+    pattern_key = np.fft.fft(pattern)
+    pattern_sq_key = np.fft.fft(pattern_sq)
+    pattern_cube_key = np.fft.fft(pattern_cube)
 
     #there are three terms.  Since fft(key) is Linear, we will IFT each
     #individually
@@ -92,9 +92,9 @@ def fft_match_index(text, pattern, n, m):
     out_term_2_key =  pattern_sq_key * text_sq_key
     out_term_3_key = pattern_key * text_cube_key
 
-    out_term_1 = np.fft.irfft(out_term_1_key)
-    out_term_2 = -2*np.fft.irfft(out_term_2_key)
-    out_term_3 = np.fft.irfft(out_term_3_key)
+    out_term_1 = np.fft.ifft(out_term_1_key)
+    out_term_2 = -2*np.fft.ifft(out_term_2_key)
+    out_term_3 = np.fft.ifft(out_term_3_key)
 
     #TODO: may need to rotate this
     out = out_term_1 + out_term_2 + out_term_3
@@ -223,7 +223,7 @@ def fft_match_index_2d(texts, pattern):
     returns: a list containing the 0-based indices of matches of pattern in text
     '''
 
-    #Note: len(rfft(something)) != len(something) for general case
+    #Note: len(fft(something)) != len(something) for general case
 
     pattern = pattern[::-1]
 
@@ -243,17 +243,20 @@ def fft_match_index_2d(texts, pattern):
 
     assert len(binary_encoded_text) == len(binary_encoded_pattern)
 
+    #binary_encoded_pattern = np.roll(binary_encoded_pattern, m//2,axis=1)
+    #binary_encoded_pattern = np.roll(binary_encoded_pattern, m//2,axis=0)
+
     pattern = binary_encoded_pattern
     pattern_sq = pattern * pattern
     pattern_cube = pattern_sq * pattern
 
-    text_key = np.fft.rfft2(text)
-    text_sq_key = np.fft.rfft2(text_sq)
-    text_cube_key = np.fft.rfft2(text_cube)
+    text_key = np.fft.fft2(text)
+    text_sq_key = np.fft.fft2(text_sq)
+    text_cube_key = np.fft.fft2(text_cube)
 
-    pattern_key = np.fft.rfft2(pattern)
-    pattern_sq_key = np.fft.rfft2(pattern_sq)
-    pattern_cube_key = np.fft.rfft2(pattern_cube)
+    pattern_key = np.fft.fft2(pattern)
+    pattern_sq_key = np.fft.fft2(pattern_sq)
+    pattern_cube_key = np.fft.fft2(pattern_cube)
 
     #there are three terms.  Since fft(key) is Linear, we will IFT each
     #individually
@@ -261,9 +264,9 @@ def fft_match_index_2d(texts, pattern):
     out_term_2_key =  pattern_sq_key * text_sq_key
     out_term_3_key = pattern_key * text_cube_key
 
-    out_term_1 = np.fft.irfft2(out_term_1_key)
-    out_term_2 = -2*np.fft.irfft2(out_term_2_key)
-    out_term_3 = np.fft.irfft2(out_term_3_key)
+    out_term_1 = np.fft.ifft2(out_term_1_key)
+    out_term_2 = -2*np.fft.ifft2(out_term_2_key)
+    out_term_3 = np.fft.ifft2(out_term_3_key)
 
     out = out_term_1 + out_term_2 + out_term_3
 
@@ -303,8 +306,11 @@ if __name__ == '__main__':
     #print out, naive_string_match_index(text, pattern)
     #assert out == naive_string_match_index(text, pattern)
 
-    texts = ["AAAB", "ABCD", "AAAB", "AAAB", "AAAB"]
-    pattern = "AB"
+    texts = ["AAABC", "ABCDC", "AAABC", "AAABC", "AAABC"]
+    #texts = ["AAA", "BBB", "CCC", "DDD", "BBB"]
+    pattern = "BC"
+    print fft_match_index_n_log_n("AAAAAABBC", "BC")
 
     #print fft_match_index_2d(texts, pattern2)
-    print fft_match_index_n_sq_log_n(texts, pattern)
+    #print fft_match_index_n_sq_log_n(texts, pattern)
+    #print fft_match_index_n_sq_log_n_naive(texts, pattern)
