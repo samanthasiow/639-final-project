@@ -12,7 +12,7 @@ want to run the search on. Default=nlogn')
 
 # Pattern arg: substring to search genomes for.
 parser.add_argument('pattern', help='The pattern that you want to search for in\
- the genome(s)', nargs=1)
+ the genome(s)')
 
 # Genome arg: Genomes to search
 parser.add_argument('genomes', nargs='+',
@@ -34,16 +34,16 @@ for genome_fn in args.genomes:
 # Parse args
 if args.algorithm == 'nlogn':
     for gn in genomes:
-        matches = fft.fft_match_index_n_log_n(genomes[gn], args.pattern[0])
+        matches = fft.fft_match_index_n_log_n(genomes[gn], args.pattern)
         print gn, ': Found matches at indices', matches
     pass
 elif args.algorithm == 'nlogm':
     for gn in genomes:
-        matches = fft.fft_match_index_n_log_m(genomes[gn], args.pattern[0])
+        matches = fft.fft_match_index_n_log_m(genomes[gn], args.pattern)
         print gn, ': Found matches at indices', matches
     pass
 elif args.algorithm == 'boyermoore':
     for gn in genomes:
-        matches = bm.boyer_moore_match_index(genomes[gn], args.pattern[0])
+        matches = bm.boyer_moore_match_index(genomes[gn], args.pattern)
         print gn, ': Found matches at indices', matches
     pass
