@@ -94,19 +94,40 @@ positive integer')
     pattern = np.array([string_to_binary_array(pattern)])\
         .astype(np.float32)
 
-
+    print 'n', n
     start = 0
 
     if chunk_size == 'm':
         chunk_size = m
 
-    indices = []
+    indices = [np.array([])] * texts.shape[0]
     while start < n-chunk_size:
         index = cv_match(texts[:,start:start+chunk_size*2], pattern)
-        for i in index:
-            indices.append(i+start)
+        #print 'index', index.shape
+        #print index
+        #print '-----'
+        for i in range(len(indices)):
+            if index[i].shape > 0:
+                try:
+                    indices[i] = np.append(indices[i], start+index[i,:])
+                except IndexError as ie:
+                    print 'index error'
+                    print indices
+                    print index
+                    print 'type indices', type(indices[i])
+                    print 'type index', type(index)
+                    print 'type index[i]', type(index[i])
+                    print 'i', i
+                    print 'index[i].shape', index[i].shape
+                    print 'indices[i].shape', indices[i].shape
+                    raise ie
+
         start += chunk_size
-    return np.array(indices)
+
+    out = [[]]*texts.shape[0]
+    for i in range(len(out)):
+        out[i] = np.unique(indices[i])
+    return np.array(out).astype(int)
 
 def cv_match_index_gpu(texts, pattern):
     texts = texts_to_array(texts)
