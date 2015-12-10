@@ -15,7 +15,7 @@ want to run the search on. Default=nlogm')
 
 # Pattern arg: substring to search genomes for.
 parser.add_argument('pattern', help='The pattern that you want to search for in\
- the genome(s)', nargs=1)
+ the genome(s)')
 
 # Genome arg: Genomes to search
 parser.add_argument('genomes', nargs='+',
@@ -43,6 +43,7 @@ genome_titles = sorted_genomes.keys()
 # Parse args
 if args.algorithm == 'nlogn':
     for gn in genomes:
+<<<<<<< HEAD
         matches = fft.fft_match_index_n_log_n(genomes[gn], args.pattern[0])
         print gn, ': Found matches at indices', matches.tolist()
     pass
@@ -55,4 +56,18 @@ elif args.algorithm == 'boyermoore':
     for gn in genomes:
         matches = bm.boyer_moore_match_index(genomes[gn], args.pattern[0])
         print gn, ': Found matches at indices', matches.tolist()
+=======
+        matches = fft.fft_match_index_n_log_n(genomes[gn], args.pattern)
+        print gn, ': Found matches at indices', matches
+    pass
+elif args.algorithm == 'nlogm':
+    for gn in genomes:
+        matches = fft.fft_match_index_n_log_m(genomes[gn], args.pattern)
+        print gn, ': Found matches at indices', matches
+    pass
+elif args.algorithm == 'boyermoore':
+    for gn in genomes:
+        matches = bm.boyer_moore_match_index(genomes[gn], args.pattern)
+        print gn, ': Found matches at indices', matches
+>>>>>>> dee268cae6be399a7b510007f433b3fb5bbcbc45
     pass

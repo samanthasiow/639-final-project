@@ -12,12 +12,19 @@ def format_error_message(function_name):
     return "failed on function {}".format(function_name)
 
 def string_match_decorator(string_matching_algorithms):
+    """
+    Applies the Unit Test function on all of the string_matching_algorithms
+    in the string_matching_algorithms list
+    """
     def inner_decorator(function):
         @functools.wraps(function)
         def inner_function(self):
             '''Class method to run string matching algorithms'''
             for sma in string_matching_algorithms:
+                #try:
                 function(self, sma)
+                #except Exception as e:
+                #    raise type(e)(e.message + '\nCaused by {}'.format(sma))
         return inner_function
     return inner_decorator
 
@@ -31,7 +38,8 @@ oned_string_matching_algorithms = [fftmatch.naive_string_match_index,
 twod_string_matching_algorithms = [fftmatch.fft_match_index_n_sq_log_n,
                                    fftmatch.fft_match_index_n_sq_log_n_naive,
                                    fftmatch.fft_match_index_n_sq_log_m,
-                                   cvmatch.cv_match_index]
+                                   cvmatch.cv_match_index,
+                                   cvmatch.cv_match_index_chunk]
 
 def ndarrays_equal(arr1, arr2):
     """
@@ -162,6 +170,32 @@ class MultiGenomeTestRig(unittest.TestCase):
             self.assertTrue((func(texts, patterns[i]) == \
                                 expected_outputs[i]).all(),
                 msg=format_error_message(func))
+
+    @string_match_decorator(twod_string_matching_algorithms)
+    def test_different_length_input_strings(self, func):
+        #self.assertTrue(False)
+        texts = ["ABCD", "ABC", "ABCDD"]
+        pattern = "AB"
+
+        expected_output = np.array([[0]]*3)
+
+        self.assertTrue((func(texts, pattern) == expected_output).all())
+
+        texts = ["ABCD", "ABC", "ABCDD"]
+        pattern = "DD"
+
+        expected_output = np.array([[], [], [3]])
+        _pass = ndarrays_equal(func(texts, pattern), expected_output)
+
+        self.assertTrue(_pass)
+
+        texts = ["ABCD", "ABC", "ABCDD"]
+        pattern = "DA"
+
+        expected_output = np.array([[], [], []])
+        _pass = ndarrays_equal(func(texts, pattern), expected_output)
+
+        self.assertTrue(_pass)
 
     @string_match_decorator(twod_string_matching_algorithms)
     def test_long_stream(self, func):

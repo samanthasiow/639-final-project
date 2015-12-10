@@ -4,14 +4,60 @@ a source text (genome).
 '''
 import numpy as np
 
-def string_to_binary_array(s, size=None):
+def string_to_binary_array(s, size=None, pad=False):
+    """
+    Converts a string to a numpy array of the ord values of the characters
+
+    Arguments
+    ---------
+    s : string
+        The string that will be converted to a numpy array
+    size : int
+        The size of the array that will be created
+    pad : bool
+        if False, characters in indices from len(s) to size will be 0
+        if True, characters in indicesfrom len(s) to size will be '0',
+            which is our null character
+
+    Returns
+    -------
+    s_arr : numpy array with length 'size'
+        An array containing the ord values of the strings in s
+    """
     #TODO: check dtype for the algorithm
     #A,C,G,T = [np.zeros(len(s) if not size else size) for _ in range(4)]
     t = np.zeros(len(s) if not size else size)
     for index, val in enumerate(s):
         t[index] = float(ord(val))
 
+    #set the rest to the null character
+    if pad:
+        t[len(s):] = ord('0')
+
     return t
+
+def texts_to_array(texts):
+    """
+    Converts texts into an array of floats of their ascii representation
+
+    Arguments
+    ---------
+    texts : list of str
+        texts has k rows, and the maximum length string is length N
+
+    Returns
+    -------
+    arr : numpy array
+        k X N array with the float ascii representation of all of the texts
+    """
+    n = max(map(len, texts))
+    out = np.ndarray((len(texts), n))
+    for index, row in enumerate(texts):
+        out[index,:] = string_to_binary_array(row,n, pad=True)
+
+    return out.astype(np.float32)
+
+
 
 #TODO: replace this with one of our other faster match-index solving algs from
 # lecture notes or homeworks
@@ -175,13 +221,19 @@ positive integer')
 def fft_match_index_n_sq_log_n_naive(texts, pattern):
     '''Does the n_log_n match fft match index algorithm on k texts.
 
-    The running time of this algorithm is k*n\log{n}
+    The running time of this algorithm is k*n\log{n}, where k is the number of
+    texts, and n is the length of the longest text.
 
     arguments:
       text: a list of the texts that you are interested in searching
       pattern: the pattern that may be contained in multiple locations inside
         the text
-    returns: a list containing the 0-based indices of matches of pattern in text
+    Returns
+    -------
+    matches : numpy array
+        array containing the 0-based indices of matches of pattern in text.
+        the array has k rows, and the i'th row's length is the length of
+        texts[i]
 
     '''
     return np.array([fft_match_index(i, pattern, len(i), len(pattern)) for i in texts])
@@ -227,8 +279,9 @@ def fft_match_index_2d(texts, pattern):
 
     pattern = pattern[::-1]
 
-    binary_encoded_text = [string_to_binary_array(text) for text in texts]
-    binary_encoded_text = np.array(binary_encoded_text)
+    #binary_encoded_text = [string_to_binary_array(text) for text in texts]
+    #binary_encoded_text = np.array(binary_encoded_text)
+    binary_encoded_text = texts_to_array(texts)
 
     #TODO: for binary_encoded_text and pattern, if the char is equal to the
     # don't care character, then set the float value to 0.0
@@ -286,7 +339,7 @@ def fft_match_index_2d(texts, pattern):
         temp = matches[1][np.where(matches[0] ==i)] - (m-1)
         out.append(temp[temp >= 0])
     matches = np.array(out)
-    
+
     return matches
 
 def fft_match_index_n_sq_log_n(texts, pattern):
@@ -306,11 +359,18 @@ if __name__ == '__main__':
     #print out, naive_string_match_index(text, pattern)
     #assert out == naive_string_match_index(text, pattern)
 
-    texts = ["AAABC", "ABCDC", "AAABC", "AAABC", "AAABC"]
+    #texts = ["AAABC", "ABCDC", "AAABC", "AAABC", "AAABC"]
     #texts = ["AAA", "BBB", "CCC", "DDD", "BBB"]
-    pattern = "BC"
-    print fft_match_index_n_log_n("AAAAAABBC", "BC")
+    #pattern = "BC"
+    #print fft_match_index_n_log_n("AAAAAABBC", "BC")
 
     #print fft_match_index_2d(texts, pattern2)
     #print fft_match_index_n_sq_log_n(texts, pattern)
     #print fft_match_index_n_sq_log_n_naive(texts, pattern)
+    
+    texts = ["ABCD", "ABC", "ABCDD"]
+    #pattern = "AB"
+    pattern = "DD"
+    out = fft_match_index_n_sq_log_n(texts, pattern)
+    print out
+    print out == np.array([[], [], [0]])
