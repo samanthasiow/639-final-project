@@ -1,14 +1,17 @@
+#!/usr/bin/env python
+
 import fftmatch as fft
 import boyermoore as bm
 import argparse
+import collections
 
 parser = argparse.ArgumentParser(description='Search for a substring in a \
 genome')
 
-# Algorithm flag: Options= nlogn, nlogm, boyer moore; Default=nlogn
+# Algorithm flag: Options= nlogn, nlogm, boyer moore; Default=nlogm
 parser.add_argument('-a','--algorithm', choices=["nlogn", "nlogm", "boyermoore"],
-                    default='nlogn', nargs='?', help='The algorithm that you \
-want to run the search on. Default=nlogn')
+                    default='nlogm', nargs='?', help='The algorithm that you \
+want to run the search on. Default=nlogm')
 
 # Pattern arg: substring to search genomes for.
 parser.add_argument('pattern', help='The pattern that you want to search for in\
@@ -31,19 +34,24 @@ for genome_fn in args.genomes:
             genome += line.rstrip()
     genomes[title] = genome
 
+sorted_genomes = collections.OrderedDict(sorted(genomes.items(),
+                                      key=lambda t: t[0]))
+genome_strings = sorted_genomes.values()
+genome_titles = sorted_genomes.keys()
+
 # Parse args
 if args.algorithm == 'nlogn':
     for gn in genomes:
-        matches = fft.fft_match_index_n_log_n(genomes[gn], args.pattern)
-        print gn, ': Found matches at indices', matches
+        matches = fft.fft_match_index_n_log_n(genomes[gn], args.pattern[0])
+        print gn, ': Found matches at indices', matches.tolist()
     pass
 elif args.algorithm == 'nlogm':
     for gn in genomes:
-        matches = fft.fft_match_index_n_log_m(genomes[gn], args.pattern)
-        print gn, ': Found matches at indices', matches
+        matches = fft.fft_match_index_n_log_m(genomes[gn], args.pattern[0])
+        print gn, ': Found matches at indices', matches.tolist()
     pass
 elif args.algorithm == 'boyermoore':
     for gn in genomes:
-        matches = bm.boyer_moore_match_index(genomes[gn], args.pattern)
-        print gn, ': Found matches at indices', matches
+        matches = bm.boyer_moore_match_index(genomes[gn], args.pattern[0])
+        print gn, ': Found matches at indices', matches.tolist()
     pass

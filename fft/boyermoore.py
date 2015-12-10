@@ -24,7 +24,7 @@ def z_array(s):
             z[1] += 1
         else:
             break
-    
+
     r, l = 0, 0
     if z[1] > 0:
         r, l = z[1], 1
@@ -198,8 +198,14 @@ def boyer_moore_match_index(text, pattern):
     if len(pattern) == 1:
         return np.array([i for i, x in enumerate(text) if x == pattern])
     p_bm = BoyerMoore(pattern)#, alphabet='abcdefghijklmnopqrstuvwxyz')
-    
+
     return np.array(boyer_moore(pattern, p_bm, text))
+
+def boyer_moore_mult_match_index(texts, pattern):
+    '''Wrapper for Boyer Moore on multiple texts that uses the same interface
+    as the other functions we developed.'''
+
+    return np.array([boyer_moore_match_index(i, pattern) for i in texts])
 
 if __name__ == "__main__":
     t = 'haystack needle haystack' # "text" - thing we search in
