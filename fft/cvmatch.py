@@ -66,6 +66,9 @@ def cv_match_index_chunk(texts, pattern, chunk_size='m'):
     the length of the pattern, we pad the end with 0s. Change this if 0s are in 
     the alphabet.
 
+    This is similar to fftmatch.fft_match_index_n_log_m, but it operates on
+    multiple texts at the same time.
+
 
     Arguments
     ---------
