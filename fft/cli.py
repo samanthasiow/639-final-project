@@ -39,6 +39,7 @@ sorted_genomes = collections.OrderedDict(sorted(genomes.items(),
 genome_strings = sorted_genomes.values()
 genome_titles = sorted_genomes.keys()
 
+# why is this file not up to date someone pls give me a sign
 # Parse args
 if args.algorithm == 'nlogn':
     for gn in genomes:
