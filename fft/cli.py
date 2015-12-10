@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import fftmatch as fft
 import boyermoore as bm
 import argparse
@@ -6,10 +8,10 @@ import collections
 parser = argparse.ArgumentParser(description='Search for a substring in a \
 genome')
 
-# Algorithm flag: Options= nlogn, nlogm, boyer moore; Default=nlogn
+# Algorithm flag: Options= nlogn, nlogm, boyer moore; Default=nlogm
 parser.add_argument('-a','--algorithm', choices=["nlogn", "nlogm", "boyermoore"],
-                    default='nlogn', nargs='?', help='The algorithm that you \
-want to run the search on. Default=nlogn')
+                    default='nlogm', nargs='?', help='The algorithm that you \
+want to run the search on. Default=nlogm')
 
 # Pattern arg: substring to search genomes for.
 parser.add_argument('pattern', help='The pattern that you want to search for in\
@@ -39,17 +41,17 @@ genome_titles = sorted_genomes.keys()
 
 # Parse args
 if args.algorithm == 'nlogn':
-    matches = fft.fft_match_index_n_sq_log_n(genome_strings, args.pattern[0])
-    for i,match in enumerate(matches):
-        print genome_titles[i], ': Found matches at indices', match
+    for gn in genomes:
+        matches = fft.fft_match_index_n_log_n(genomes[gn], args.pattern[0])
+        print gn, ': Found matches at indices', matches.tolist()
     pass
 elif args.algorithm == 'nlogm':
-    matches = fft.fft_match_index_n_sq_log_m(genome_strings, args.pattern[0])
-    for i,match in enumerate(matches):
-        print genome_titles[i], ': Found matches at indices', match
+    for gn in genomes:
+        matches = fft.fft_match_index_n_log_m(genomes[gn], args.pattern[0])
+        print gn, ': Found matches at indices', matches.tolist()
     pass
 elif args.algorithm == 'boyermoore':
-    matches = bm.boyer_moore_mult_match_index(genome_strings, args.pattern[0])
-    for i,match in enumerate(matches):
-        print genome_titles[i], ': Found matches at indices', match
+    for gn in genomes:
+        matches = bm.boyer_moore_match_index(genomes[gn], args.pattern[0])
+        print gn, ': Found matches at indices', matches.tolist()
     pass
