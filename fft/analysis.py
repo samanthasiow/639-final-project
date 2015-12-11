@@ -24,69 +24,48 @@ genomes = {}
 # Scan files and store the title and genome string in genomes dictionary
 for genome_fn in args.genomes:
     with open(genome_fn) as gn:
-        title = gn.readline().rstrip()
+        
         genome = ''
         for line in gn:
             genome += line.rstrip()
-    genomes[title] = genome
+    genomes[genome_fn] = genome
 
 sorted_genomes = collections.OrderedDict(sorted(genomes.items(),
                                       key=lambda t: t[0]))
 genome_strings = sorted_genomes.values()
 genome_titles = sorted_genomes.keys()
 
-# analysis dictionary holds all data about the algorithms
-analysis = {'substring_length':len(args.pattern), 'substring': args.pattern}
-text_length = 0
+for k,gn in genomes.items():
+    # analysis dictionary holds all data about the algorithms
+    analysis = {'substring_length':len(args.pattern), 'substring': args.pattern, 'text_length': len(gn)}
 
-# Get time to run algorithm on all substrings
-boyermoore_data = {'name': 'boyermoore'}
-nlogn_data = {'name': 'nlogn'}
-nlogm_data = {'name': 'nlogm'}
+    # Get time to run algorithm on all substrings
+    boyermoore_data = {'name': 'boyermoore'}
+    nlogn_data = {'name': 'nlogn'}
+    nlogm_data = {'name': 'nlogm'}
 
-# all accuracy is compared against boyer moore
-total_matches = []
-with Timer() as t:
-    for gn in genomes:
-        matches = bm.boyer_moore_match_index(genomes[gn], args.pattern)
-        total_matches.append(len(matches))
-        text_length += len(gn)
-boyermoore_data['time'] = t.msecs
-analysis['text_length'] = text_length
-boyermoore_data['accuracy'] = 100
+    with Timer() as t:
+        bm_matches = bm.boyer_moore_match_index(gn, args.pattern)
+    boyermoore_data['time'] = t.msecs
+    boyermoore_data['accuracy'] = 1
+    num_matches = len(bm_matches)
 
-# nlogn calculations
-nlogn_matches = []
-with Timer() as t:
-    for gn in genomes:
-        matches = fft.fft_match_index_n_log_n(genomes[gn], args.pattern)
-        nlogn_matches.append(len(matches))
-nlogn_data['time'] = t.msecs
+    with Timer() as t:
+        nlogn_matches = fft.fft_match_index_n_log_n(gn, args.pattern)
+    nlogn_data['time'] = t.msecs
+    nlogn_data['accuracy'] = len(nlogn_matches) / num_matches
+    print len(nlogn_matches) / num_matches
 
-# nlogn accuracy calculation
-for i in range(len(total_matches)):
-    nlogn_matches[i] = nlogn_matches[i] / total_matches[i]
-nlogn_data['accuracy'] = reduce(lambda x, y: x + y, nlogn_matches) * 100 / len(nlogn_matches)
+    with Timer() as t:
+        nlogm_matches = fft.fft_match_index_n_log_m(gn, args.pattern)
+    nlogm_data['time'] = t.msecs
+    nlogm_data['accuracy'] = len(nlogm_matches) / num_matches
 
-# nlogm calculations
-nlogm_matches = []
-with Timer() as t:
-    for gn in genomes:
-        matches = fft.fft_match_index_n_log_m(genomes[gn], args.pattern)
-        nlogm_matches.append(len(matches))
-nlogm_data['time'] = t.msecs
+    algorithms = []
+    algorithms.append(boyermoore_data)
+    algorithms.append(nlogn_data)
+    algorithms.append(nlogm_data)
 
-# nlogm accuracy calculations
-for i in range(len(total_matches)):
-    nlogm_matches[i] = nlogm_matches[i] / total_matches[i]
-nlogm_data['accuracy'] = reduce(lambda x, y: x + y, nlogm_matches) * 100 / len(nlogm_matches)
-
-algorithms = []
-algorithms.append(boyermoore_data)
-algorithms.append(nlogn_data)
-algorithms.append(nlogm_data)
-
-analysis['algorithms'] = algorithms
-
-# make pretty json format
-print json.dumps(analysis)
+    analysis['algorithms'] = algorithms
+    # make pretty json format
+    print json.dumps(analysis)
