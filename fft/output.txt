@@ -1,0 +1,2 @@
+{"substring_length": 3, "substring": "CAG", "algorithms": [{"accuracy": 100, "name": "boyermoore", "time": 1.4379024505615234}, {"accuracy": 100, "name": "nlogn", "time": 1.973867416381836}, {"accuracy": 100, "name": "nlogm", "time": 50.35090446472168}], "text_length": 83}
+{"substring_length": 3, "substring": "CAG", "algorithms": [{"accuracy": 100, "name": "boyermoore", "time": 1.5468597412109375}, {"accuracy": 100, "name": "nlogn", "time": 1.7800331115722656}, {"accuracy": 100, "name": "nlogm", "time": 53.559064865112305}], "text_length": 83}
