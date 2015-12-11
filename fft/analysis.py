@@ -71,7 +71,7 @@ def time_analysis(genomes):
     nlogm_matches = []
     with Timer() as t:
         for g in genomes:
-            nlogm_matches.append(fft.fft_match_index_n_log_m(g, args.pattern, chunk_size=936))
+            nlogm_matches.append(fft.fft_match_index_n_log_m(g, args.pattern, chunk_size=300))
     nlogm_data['time'] = t.msecs
 
     accuracy = 0

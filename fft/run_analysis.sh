@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo 'Running analysis of time vs test length. Chunk size for nlogm = 936.' > ../results/genes_data/performance_by_text_length
+echo 'Running analysis of time vs test length. Chunk size for nlogm = 300.' > ../results/genes_data/performance_by_text_length
 echo 'Run with: python analysis.py CAG ../Genes/Genes\ by\ Size/pow_[GENE NUM]/*' >> ../results/genes_data/performance_by_text_length
 
 for i in `seq 6 16`;
