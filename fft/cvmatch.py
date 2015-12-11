@@ -66,6 +66,9 @@ def cv_match_index_chunk(texts, pattern, chunk_size='m'):
     the length of the pattern, we pad the end with 0s. Change this if 0s are in 
     the alphabet.
 
+    This is similar to fftmatch.fft_match_index_n_log_m, but it operates on
+    multiple texts at the same time.
+
 
     Arguments
     ---------
@@ -94,19 +97,25 @@ positive integer')
     pattern = np.array([string_to_binary_array(pattern)])\
         .astype(np.float32)
 
-
     start = 0
 
     if chunk_size == 'm':
         chunk_size = m
 
-    indices = []
+    indices = [np.array([])] * texts.shape[0]
     while start < n-chunk_size:
         index = cv_match(texts[:,start:start+chunk_size*2], pattern)
-        for i in index:
-            indices.append(i+start)
+        for i in range(len(indices)):
+            if index[i].shape > 0:
+                indices[i] = np.append(indices[i], start+index[i])
+
         start += chunk_size
-    return np.array(indices)
+
+    out = [[]]*texts.shape[0]
+    for i in range(len(out)):
+        out[i] = np.unique(indices[i]).astype(int)
+
+    return np.array(out)
 
 def cv_match_index_gpu(texts, pattern):
     texts = texts_to_array(texts)
