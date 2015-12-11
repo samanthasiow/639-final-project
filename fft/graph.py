@@ -23,6 +23,7 @@ def plot_chunk_time(data):
     pyplot.ylabel('Time/msecs')
     pyplot.plot(chunk_size, boyer_moore, label='boyer moore')
     pyplot.plot(chunk_size, nlogm_time, 'ro', label='nlogm')
+    pyplot.legend(loc='upper right')
     pyplot.title('Performance time of nlogm vs Length of m')
     pyplot.show()
 
@@ -48,16 +49,26 @@ def plot_alg_time(data):
     pyplot.plot(text_length, time['nlogn'], label='nlogn')
     pyplot.plot(text_length, time['nlogm'],  label='nlogm',)
     pyplot.title('Time Performance of Algorithms vs Text Length')
+
+    pyplot.legend(loc='upper left')
     pyplot.show()
 
 parser = argparse.ArgumentParser(description='Graph values from analysis.')
+parser.add_argument('-c','--chunk', action='store_true',
+                    help='Graph by chunk size on the nlogm algorithm.')
 parser.add_argument('data', help='The file to load data from.')
+
 
 args = parser.parse_args()
 
 data = []
 with open(args.data) as dn:
+    title = dn.readline()
+    execution = dn.readline()
     for line in dn:
         data.append(yaml.load(line.rstrip()))
 
-plot_alg_time(data)
+if args.chunk:
+    plot_chunk_time(data)
+else:
+    plot_alg_time(data)
