@@ -3,9 +3,10 @@ EN 600.639: Final Project with Samantha Siow, Michael Norris, Aaron Lerner, and 
 
 Dependencies
 ------------
-numpy (pip install numpy)
-opencv (on mac, brew install opencv)
-swig (on mac, brew install swig)
+* numpy (pip install numpy)
+* opencv (on mac, brew install opencv)
+* cv2
+* swig (on mac, brew install swig)
 
 How to run
 ----------
