@@ -188,6 +188,8 @@ def fft_match_index_n_log_m(text, pattern, chunk_size='m'):
         if a positive integer, it will break up the string into size
             2*chunk_size chunks
 
+        chunk_size must be >= len(m) for the algorithm to find matches
+
     returns: a list containing the 0-based indices of matches of pattern in text
     '''
     if not (chunk_size == 'm' or ((type(chunk_size) == int) and chunk_size>0)):
