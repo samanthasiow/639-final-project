@@ -2,29 +2,36 @@ import matplotlib.pyplot as pyplot
 import yaml
 import argparse
 
-def plot_chunk_time(data):
+def plot_chunk_time(data, alg_name):
     boyer_moore = []
-    nlogm = {}
+    alg = {}
     for d in data:
-        for alg in d['algorithms']:
-            if alg['name'] == 'nlogm':
-                chunk_size = alg['chunk_size']
-                nlogm[chunk_size] = alg['time']
+        for a in d['algorithms']:
+            if a['name'] == alg_name:
+                chunk_size = a['chunk_size']
+                alg[chunk_size] = a['time']
             else:
-                boyer_moore.append(alg['time'])
+                boyer_moore.append(a['time'])
 
     chunk_size = []
-    nlogm_time = []
-    for k,v in nlogm.items():
+    alg_time = []
+    for k,v in alg.items():
         chunk_size.append(k)
-        nlogm_time.append(v)
+        alg_time.append(v)
 
     pyplot.xlabel('Chunk Size')
     pyplot.ylabel('Time/msecs')
-    pyplot.plot(chunk_size, boyer_moore, label='boyer moore')
-    pyplot.plot(chunk_size, nlogm_time, 'ro', label='nlogm')
+    # print 'CS:', chunk_size
+    # print 'BM:', boyer_moore
+    # print 'AT:', alg_time
+    pyplot.plot(chunk_size, boyer_moore, label='Boyer Moore')
+
+    if alg_name == "nlogm":
+        pyplot.plot(chunk_size, alg_time, 'ro', label='n^2 log m')
+    else:
+        pyplot.plot(chunk_size, alg_time, 'ro', label='OpenCV')
     pyplot.legend(loc='upper right')
-    pyplot.title('Performance time of nlogm vs Length of m')
+    pyplot.title('Performance time of nlogm vs Length of \'chunks\'')
     pyplot.show()
 
 def plot_alg_time(data):
@@ -46,16 +53,17 @@ def plot_alg_time(data):
     pyplot.xlabel('Text Length')
     pyplot.ylabel('Time/msecs')
     pyplot.plot(text_length, time['boyermoore'], label='boyer moore')
-    pyplot.plot(text_length, time['nlogn'], label='nlogn')
-    pyplot.plot(text_length, time['nlogm'],  label='nlogm',)
+    pyplot.plot(text_length, time['opencv'], label='opencv')
+    pyplot.plot(text_length, time['nlogn'], label='n^2 logn')
+    pyplot.plot(text_length, time['nlogm'],  label='n^2 logm',)
     pyplot.title('Time Performance of Algorithms vs Text Length')
 
     pyplot.legend(loc='upper left')
     pyplot.show()
 
 parser = argparse.ArgumentParser(description='Graph values from analysis.')
-parser.add_argument('-c','--chunk', action='store_true',
-                    help='Graph by chunk size on the nlogm algorithm.')
+parser.add_argument('-c','--chunk', nargs=1, choices=['nlogm', 'opencv'],
+                    help='Graph by chunk size on an algorithm.')
 parser.add_argument('data', help='The file to load data from.')
 
 
@@ -69,6 +77,6 @@ with open(args.data) as dn:
         data.append(yaml.load(line.rstrip()))
 
 if args.chunk:
-    plot_chunk_time(data)
+    plot_chunk_time(data, args.chunk[0])
 else:
     plot_alg_time(data)
