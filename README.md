@@ -15,8 +15,9 @@ Our code is in the fft directory
     $ python cli.py
 
 #algorithms that match a single genome to a single substring
-  fftmatch.naive\_string\_match\_index(text, pattern)
-  fftmatch.fft\_match\_index\_n\_log\_n(text, pattern)
+
+    fftmatch.naive\_string\_match\_index(text, pattern)
+    fftmatch.fft\_match\_index\_n\_log\_n(text, pattern)
 Naive 1-D FFT-based match-index algorithm
 
   fftmatch.fft\_match\_index\_n\_log\_m(text, pattern)
@@ -50,6 +51,7 @@ Run with:
 
     sh run_analysis.sh
 
-Writes results to the results folder. Performs analysis on the time performance
+Writes results to the results folder. 
+Performs analysis on the time performance
 of the algorithms according to text length, as well as the time performance of
 the nlogm algorithm by the chunk size.
