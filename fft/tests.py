@@ -145,6 +145,15 @@ class FFTStringMatchTestRig(unittest.TestCase):
              pattern=pattern))).all(),
             msg=format_error_message(func))
 
+    def test_chunk_sizes(self):
+        text = "AAACCCAAA"
+        chunk_size = 'm'
+        pattern = "CC"
+        self.assertTrue((
+            fftmatch.fft_match_index_n_log_m(text, pattern, chunk_size) == \
+            np.array(boyermoore.boyer_moore_match_index(text,pattern))).all())
+
+
 class MultiGenomeTestRig(unittest.TestCase):
     @string_match_decorator(twod_string_matching_algorithms)
     def test_multi_genome_search(self, func):
