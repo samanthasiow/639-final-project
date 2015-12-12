@@ -37,6 +37,7 @@ oned_string_matching_algorithms = [fftmatch.naive_string_match_index,
 #algorithms that match multiple genomes to a single substring
 twod_string_matching_algorithms = [fftmatch.fft_match_index_n_sq_log_n,
                                    fftmatch.fft_match_index_n_sq_log_n_naive,
+                                   fftmatch.fft_match_index_n_sq_log_m_naive,
                                    fftmatch.fft_match_index_n_sq_log_m,
                                    cvmatch.cv_match_index,
                                    cvmatch.cv_match_index_chunk]
