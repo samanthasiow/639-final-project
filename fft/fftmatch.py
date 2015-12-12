@@ -240,7 +240,7 @@ def fft_match_index_n_sq_log_n_naive(texts, pattern):
     '''
     return np.array([fft_match_index(i, pattern, len(i), len(pattern)) for i in texts])
 
-def fft_match_index_n_sq_log_m(texts, pattern):
+def fft_match_index_n_sq_log_m_naive(texts, pattern):
     '''Does the n log m FFT pattern matching algorithm on an array of text.
 
     arguments:
@@ -252,8 +252,11 @@ def fft_match_index_n_sq_log_m(texts, pattern):
     '''
     return np.array([fft_match_index_n_log_m(i, pattern) for i in texts])
 
-def fft_match_index_2d(texts, pattern):
-    '''Does the n log n FFT pattern matching algorithm.  This solves the match
+def fft_match_index_2d(texts, pattern, pattern_length):
+    """ 
+    This is the workhorse for the n_sq_log_n and n_sq_log_m algorithms.
+
+    Does the n log n FFT pattern matching algorithm.  This solves the match
     index problem by returning a list of indices where the pattern matches the
     text.
 
@@ -267,41 +270,30 @@ def fft_match_index_2d(texts, pattern):
 
     TODO: cite papers
 
-    arguments:
-      text: the text that you are interested in searching
-      pattern: the pattern that may be contained in multiple locations inside
-        the text
-      n: the length of the text
-      m: the length of the pattern
-      indexOffset: offset to start from
-    returns: a list containing the 0-based indices of matches of pattern in text
-    '''
+    Arguments
+    ---------
+    text : k X n numpy array
+    pattern : 1 X m numpy array
+
+    Returns
+    -------
+    matches : k x ? numpy array
+        each row has the matches for that corresponding text
+        each row could have different length
+    """
 
     #Note: len(fft(something)) != len(something) for general case
 
-    pattern = pattern[::-1]
-
-    #binary_encoded_text = [string_to_binary_array(text) for text in texts]
-    #binary_encoded_text = np.array(binary_encoded_text)
-    binary_encoded_text = texts_to_array(texts)
-
     #TODO: for binary_encoded_text and pattern, if the char is equal to the
     # don't care character, then set the float value to 0.0
-    text = binary_encoded_text
+    text = texts
     text_sq = text * text
     text_cube = text_sq * text
 
-    m = len(pattern)
-    binary_encoded_pattern = np.zeros(binary_encoded_text.shape)
-    binary_encoded_pattern[0,:] = string_to_binary_array(pattern,
-                                        size=binary_encoded_text.shape[1])
-
-    assert len(binary_encoded_text) == len(binary_encoded_pattern)
-
-    #binary_encoded_pattern = np.roll(binary_encoded_pattern, m//2,axis=1)
-    #binary_encoded_pattern = np.roll(binary_encoded_pattern, m//2,axis=0)
-
-    pattern = binary_encoded_pattern
+    #m = len(pattern)
+    m = pattern_length
+    
+    #pattern = binary_encoded_pattern
     pattern_sq = pattern * pattern
     pattern_cube = pattern_sq * pattern
 
@@ -345,7 +337,95 @@ def fft_match_index_2d(texts, pattern):
     return matches
 
 def fft_match_index_n_sq_log_n(texts, pattern):
-    return fft_match_index_2d(texts, pattern)
+    pattern = pattern[::-1]
+
+    binary_encoded_text = texts_to_array(texts)
+
+    binary_encoded_pattern = np.zeros(binary_encoded_text.shape)
+    binary_encoded_pattern[0,:] = string_to_binary_array(pattern,
+                                        size=binary_encoded_text.shape[1])
+
+    assert len(binary_encoded_text) == len(binary_encoded_pattern)
+
+
+    return fft_match_index_2d(binary_encoded_text, binary_encoded_pattern,
+                              len(pattern))
+
+def fft_match_index_n_sq_log_m(texts, pattern, chunk_size='m'):
+    """
+    Performs the fft_match_index algorithm on chunks that are 'chunk_size' long.
+    If the length of the portion of the text that we're sampling is less than 
+    the length of the pattern, we pad the end with 0s. Change this if 0s are in 
+    the alphabet.
+
+    This is similar to fftmatch.fft_match_index_n_log_m, but it operates on
+    multiple texts at the same time.
+
+    Arguments
+    ---------
+    texts : list of str
+        the genomic strings to search
+    pattern : str 
+        the pattern that may be contained in multiple locations inside the text
+    chunk_size : type str or int
+        if 'm', it will use the standard algorithm for the n log m algorithm,
+            which breaks the string into 2m size chunks and performs the
+            fft match index algorithm on those chunks
+        if a positive integer, it will break up the string into size 
+            2*chunk_size chunks
+
+    returns: a list containing the 0-based indices of matches of pattern in text
+    """
+    if not (chunk_size == 'm' or ((type(chunk_size) == int) and chunk_size>0)):
+        raise Exception('fft_match_index_n_log_m chunk_size must be str or \
+positive integer')
+    n = max(map(len, texts))
+
+    m = len(pattern)
+
+    if chunk_size == 'm':
+        chunk_size = m
+
+    texts = texts_to_array(texts)
+
+    #the pattern has as many rows as genomic texts, and is as wide as the chunk
+    binary_encoded_pattern = np.zeros((texts.shape[0],2*chunk_size))
+    binary_encoded_pattern[0,:] = string_to_binary_array(pattern,
+                                        size=2*chunk_size)
+
+    pattern = binary_encoded_pattern
+
+    start = 0
+
+    indices = [np.array([])] * texts.shape[0]
+    while start < n-chunk_size:
+        
+        if start + chunk_size*2 >= n:
+            #if we are at the end, we may need to pad with the null char
+            #we need start:start+chunk_size*2 chars
+            #
+            num_chars = texts[:,start:start+chunk_size*2].shape[1]
+            pad_chars = chunk_size*2 - num_chars
+
+            text_chunk = np.pad(texts[:,start:start+chunk_size*2], 
+                                ((0,0), (0,pad_chars)),
+                                mode='constant', constant_values=(ord('0')))
+        else:
+            text_chunk = texts[:,start:start+chunk_size*2]
+
+        index = fft_match_index_2d(text_chunk, pattern, m)
+
+        for i in range(len(indices)):
+            if index[i].shape > 0:
+                indices[i] = np.append(indices[i], start+index[i])
+
+        start += chunk_size
+
+    out = [[]]*texts.shape[0]
+    for i in range(len(out)):
+        out[i] = np.unique(indices[i]).astype(int)
+
+    return np.array(out)
 
 if __name__ == '__main__':
     #f = open('1d.txt')
@@ -371,8 +451,9 @@ if __name__ == '__main__':
     #print fft_match_index_n_sq_log_n_naive(texts, pattern)
     
     texts = ["ABCD", "ABC", "ABCDD"]
-    #pattern = "AB"
-    pattern = "DD"
-    out = fft_match_index_n_sq_log_n(texts, pattern)
+    pattern = "AB"
+    #pattern = "DD"
+    #out = fft_match_index_n_sq_log_n(texts, pattern)
+    out = fft_match_index_n_sq_log_m(texts, pattern)
     print out
     print out == np.array([[], [], [0]])
