@@ -119,10 +119,10 @@ def k_analysis(genomes):
         # make pretty json format
         print json.dumps(analysis)
 
-def time_analysis(genomes, total_length):
+def time_analysis(genomes, total_length, chunk_size='m'):
     # analysis dictionary holds all data about the algorithms
     analysis = {'substring_length':len(args.pattern), 'substring': args.pattern,
-                'text_length':total_length}
+                    'text_length':total_length}
 
     # Get time to run algorithm on all substrings
     boyermoore_data = {'name': 'boyermoore'}
@@ -146,9 +146,11 @@ def time_analysis(genomes, total_length):
     nlogn_data['accuracy'] = accuracy / len(bm_matches)
 
     nlogm_matches = []
+    total_length = 0
     with Timer() as t:
         for g in genomes:
-            nlogm_matches.append(fft.fft_match_index_n_log_m(g, args.pattern, chunk_size=300))
+            total_length += len(g)
+            nlogm_matches.append(fft.fft_match_index_n_log_m(g, args.pattern, chunk_size))
     nlogm_data['time'] = t.msecs
 
     accuracy = 0
@@ -188,6 +190,8 @@ parser.add_argument('-v','--opencv', action="store_true",
 # Pattern arg: substring to search genomes for.
 parser.add_argument('-k','--genenum', action="store_true",
                     help='Analyze by number of texts the algorithms.')
+parser.add_argument('-o','--optimize', action="store_true",
+                    help='Optimize n^2logm partition size.')
 
 parser.add_argument('pattern', help='The pattern that you want to search for in\
  the genome(s)')
@@ -204,8 +208,14 @@ total_length = 0
 # Scan files and store the title and genome string in genomes dictionary
 for genome_fn in args.genomes:
     with open(genome_fn) as gn:
-        title = gn.readline()
+        first_line = gn.readline()
         genome = ''
+        total_length = 0
+        if first_line[0] == '>':
+            title = first_line
+        else:
+            genome = first_line
+            total_length += len(genome)
         for line in gn:
             genome += line.rstrip()
             total_length += len(genome)
@@ -219,4 +229,7 @@ elif args.chunk:
     else:
         nlogm_chunk_analysis(genomes, args.chunk, total_length)
 else:
-    time_analysis(genomes,total_length)
+    if args.optimize:
+        time_analysis(genomes, total_length, chunk_size=300)
+    else:
+        time_analysis(genomes, total_length)

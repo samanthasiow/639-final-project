@@ -27,11 +27,12 @@ def plot_chunk_time(data, alg_name):
     chunk_size, alg_time = (list(t) for t in zip(*sorted(zip(chunk_size,alg_time))))
 
     if alg_name == "nlogm":
-        pyplot.plot(chunk_size, alg_time, label='n^2 log m')
+        pyplot.plot(chunk_size, alg_time, label='n^2 logm')
+        title = 'Performance time of n^2 logm vs Length of \'chunks\' on text of length ' + str(text_length)
     else:
         pyplot.plot(chunk_size, alg_time, label='OpenCV')
+        title = 'Performance time of OpenCV vs Length of \'chunks\' on text of length ' + str(text_length)
     pyplot.legend(loc='upper right')
-    title = 'Performance time of nlogm vs Length of \'chunks\' on text of length ' + str(text_length)
     pyplot.title(title)
     pyplot.show()
 
