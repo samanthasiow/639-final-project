@@ -59,7 +59,7 @@ genome_titles = sorted_genomes.keys()
 # Parse args
 if args.algorithm == 'nlogn':
     for gn in genomes:
-        matches = fft.fft_match_index_n_log_n(genomes[gn], args.pattern[0])
+        matches = fft.fft_match_index_n_log_n(genomes[gn], args.pattern)
         print gn, ': Found matches at indices', matches.tolist()
 elif args.algorithm == 'nlogm':
     if len(genomes) > 1:
@@ -72,7 +72,7 @@ elif args.algorithm == 'nlogm':
             print gn, ': Found matches at indices', matches.tolist()
 elif args.algorithm == 'boyermoore':
     for gn in genomes:
-        matches = bm.boyer_moore_match_index(genomes[gn], args.pattern[0])
+        matches = bm.boyer_moore_match_index(genomes[gn], args.pattern)
         print gn, ': Found matches at indices', matches.tolist()
 elif args.algorithm == 'opencv':
     matches = cvmatch.cv_match_index_chunk(genomes.values(), args.pattern[0], args.b)

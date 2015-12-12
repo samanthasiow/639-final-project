@@ -185,7 +185,7 @@ def fft_match_index_n_log_m(text, pattern, chunk_size='m'):
         if 'm', it will use the standard algorithm for the n log m algorithm,
             which breaks the string into 2m size chunks and performs the
             fft match index algorithm on those chunks
-        if a positive integer, it will break up the string into size 
+        if a positive integer, it will break up the string into size
             2*chunk_size chunks
 
         chunk_size must be >= len(m) for the algorithm to find matches
@@ -449,7 +449,7 @@ if __name__ == '__main__':
     #print fft_match_index_2d(texts, pattern2)
     #print fft_match_index_n_sq_log_n(texts, pattern)
     #print fft_match_index_n_sq_log_n_naive(texts, pattern)
-    
+
     texts = ["ABCD", "ABC", "ABCDD"]
     pattern = "AB"
     #pattern = "DD"

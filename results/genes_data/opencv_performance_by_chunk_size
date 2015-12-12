@@ -1,0 +1,2 @@
+Running algorithm analysis of time vs size of texts.
+Run with: python analysis.py -k CAG ../Genes/Genes\ by\ Size/pow_10/* ../Genes/Genes\ by\ Size/pow_10/* ../Genes/Genes\ by\ Size/pow_10/* ../Genes/Genes\ by\ Size/pow_10/* > ../results/genes_data/performance_by_k

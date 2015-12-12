@@ -1,0 +1,41 @@
+Run these with a few genomes of length at least 1,000 nucleotides.  Validate that the output is equal to boyer moore
+
+Try something longer if it takes under a minute.  The n log n is probably the slowest so you can exclude that if you want to try the huntingtin's gene.
+
+These plots will be genome size vs time.  Each algorithm should be a different 
+line.
+
+fftmatch.fft\_match\_index\_n\_log\_n(text, pattern)
+fftmatch.fft\_match\_index\_n\_log\_m(text, pattern, chunk_size='m')
+boyermoore.boyer\_moore\_match\_index(text, pattern)
+
+Run the n log m on the same geneome for multiple chunk sizes, like 'm', 32, 64, 256 to see how it changes the running time
+If it doesn't take longer than a minute, then try to run it with a longer genome.
+These plots will be time vs chunk size
+
+
+(I go between calling these n^2 algorithms and n*k, where n is the max length 
+and k is the total number of genes.)
+Make like 4 sets of genes.  One with 8 genes, one with 16, one with 32, and one 
+with 64 (I'm pulling numbers out of a hat here, but this will hopefully show a 
+good pattern).  If we don't have that many genes, just reuse the same gene 
+multiple times in a set
+
+I want one plot with varying k for each of the algorithms.  So this will show time vs k for all of the n^2 algorithms.  Each algorithm is its own line.
+
+n^2 log n naive should be the slowest.
+
+I'd also like to see this run with varying length genes.  In that case, we need
+another few sets (or just take part of the huntingtin's gene).
+
+One pass will have a maximum gene length of something like 256 nucleotides, one will have a maximum length of 1024 nucleotides, another will have a maximum length of 4096 nucleotides.  Go wild here.
+
+This plot will be gene size vs time, and will have a different line for each algorithm.
+
+Note: if I finish the GPU algorithm tonight I'll want its data to be thrown in the n^2 algorithm bunch
+
+fftmatch.fft\_match\_index\_n\_sq\_log\_n(texts, pattern)
+fftmatch.fft\_match\_index\_n\_sq\_log\_n\_naive(texts, pattern)
+fftmatch.fft\_match\_index\_n\_sq\_log\_m(texts, pattern)
+cvmatch.cv\_match\_index(texts, pattern)
+cvmatch.cv\_match\_index\_chunk(texts, pattern, chunk_size='m')
