@@ -28,10 +28,10 @@ def plot_chunk_time(data, alg_name):
 
     if alg_name == "nlogm":
         pyplot.plot(chunk_size, alg_time, label='nk logm')
-        title = 'Performance time of nk logm vs Length of \'chunks\' on text of length ' + str(text_length)
+        title = 'Performance time of nk logm vs Length of \'chunks\' on text of length ' + str(text_length*10)
     else:
         pyplot.plot(chunk_size, alg_time, label='OpenCV')
-        title = 'Performance time of OpenCV vs Length of \'chunks\' on text of length ' + str(text_length)
+        title = 'Performance time of OpenCV vs Length of \'chunks\' on text of length ' + str(text_length*10)
     pyplot.legend(loc='upper right')
     pyplot.title(title)
     pyplot.show()
@@ -80,7 +80,7 @@ def plot_k_time(data):
     pyplot.plot(k_length, time['boyermoore'], label='boyer moore')
     pyplot.plot(k_length, time['opencv'], label='opencv')
     pyplot.plot(k_length, time['nlogn'], label='nk lognk')
-    title = 'Time Performance of Algorithms vs Number of Texts on text length, 10240'
+    title = 'Time Performance of Algorithms vs Number of Texts on text length, 1024'
     pyplot.title(title)
 
     pyplot.legend(loc='upper left')
