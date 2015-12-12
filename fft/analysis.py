@@ -7,7 +7,7 @@ from timer import Timer
 import json
 import cvmatch
 
-def nlogm_chunk_analysis(genomes, chunk_max):
+def nlogm_chunk_analysis(genomes, chunk_max, total_length):
     # analysis dictionary holds all data about the algorithms
     analysis = {'substring_length':len(args.pattern), 'substring': args.pattern,
                 'text_length':total_length}
@@ -43,7 +43,7 @@ def nlogm_chunk_analysis(genomes, chunk_max):
         # make pretty json format
         print json.dumps(analysis)
 
-def opencv_chunk_analysis(genomes, chunk_max):
+def opencv_chunk_analysis(genomes, chunk_max, total_length):
     # analysis dictionary holds all data about the algorithms
     analysis = {'substring_length':len(args.pattern), 'substring': args.pattern,
                 'text_length':total_length}
@@ -77,8 +77,46 @@ def opencv_chunk_analysis(genomes, chunk_max):
         # make pretty json format
         print json.dumps(analysis)
 
+def k_analysis(genomes):
+    # analysis dictionary holds all data about the algorithms
+    analysis = {'substring_length':len(args.pattern), 'substring': args.pattern}
 
-def time_analysis(genomes):
+    # Get time to run algorithm on all substrings
+    boyermoore_data = {'name': 'boyermoore'}
+    nlogn_data = {'name': 'nlogn'}
+    opencv_data = {'name': 'opencv'}
+    for i in range(1,len(genomes)):
+        analysis['k'] = i
+        k_genomes = genomes[:i]
+        with Timer() as t:
+            bm_matches = bm.boyer_moore_mult_match_index(k_genomes, args.pattern)
+        boyermoore_data['time'] = t.msecs
+        boyermoore_data['accuracy'] = 1
+
+        with Timer() as t:
+            nlogn_matches = fft.fft_match_index_2d(k_genomes, args.pattern)
+        nlogn_data['time'] = t.msecs
+        accuracy = 0
+
+        for i in range(len(nlogn_matches)):
+            i_accuracy = len(nlogn_matches[i]) / len(bm_matches[i])
+            accuracy += i_accuracy
+        nlogn_data['accuracy'] = accuracy / len(bm_matches)
+
+        with Timer() as t:
+            cvmatch.cv_match_index(k_genomes, args.pattern)
+        opencv_data['time'] = t.msecs
+
+        algorithms = []
+        algorithms.append(boyermoore_data)
+        algorithms.append(nlogn_data)
+        algorithms.append(opencv_data)
+
+        analysis['algorithms'] = algorithms
+        # make pretty json format
+        print json.dumps(analysis)
+
+def time_analysis(genomes, total_length):
     # analysis dictionary holds all data about the algorithms
     analysis = {'substring_length':len(args.pattern), 'substring': args.pattern,
                 'text_length':total_length}
@@ -144,6 +182,9 @@ parser.add_argument('-c','--chunk',nargs='?', type=int,
 # Pattern arg: substring to search genomes for.
 parser.add_argument('-v','--opencv', action="store_true",
                     help='Analyze by chunk size on the opencv algorithm.')
+# Pattern arg: substring to search genomes for.
+parser.add_argument('-k','--genenum', action="store_true",
+                    help='Analyze by number of texts the algorithms.')
 
 parser.add_argument('pattern', help='The pattern that you want to search for in\
  the genome(s)')
@@ -167,10 +208,12 @@ for genome_fn in args.genomes:
             total_length += len(genome)
     genomes.append(genome)
 
-if args.chunk:
+if args.genenum:
+    k_analysis(genomes)
+elif args.chunk:
     if args.opencv:
-        opencv_chunk_analysis(genomes,args.chunk)
+        opencv_chunk_analysis(genomes,args.chunk, total_length)
     else:
-        nlogm_chunk_analysis(genomes, args.chunk)
+        nlogm_chunk_analysis(genomes, args.chunk, total_length)
 else:
-    time_analysis(genomes)
+    time_analysis(genomes,total_length)

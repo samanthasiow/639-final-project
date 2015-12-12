@@ -14,15 +14,23 @@ for i in `seq 6 16`;
 echo 'Running nlogm analysis of time vs chunk size.' > ../results/genes_data/nlogm_performance_by_chunk_size
 echo 'Run with: python analysis.py -c 300 CAG ../Genes/Genes\ by\ Size/pow_[GENE NUM]/*' >> ../results/genes_data/nlogm_performance_by_chunk_size
 
-echo 'Getting analysis of time VS chunk_size on genes of size 2^10'
+echo 'Getting nlogm analysis of time VS chunk_size on genes of size 2^10'
 python analysis.py -c 1000 CAG ../Genes/Genes\ by\ Size/pow_10/* >> ../results/genes_data/nlogm_performance_by_chunk_size
 
 python graph.py -c nlogm ../results/genes_data/nlogm_performance_by_chunk_size
 
-echo 'Running nlogm analysis of time vs chunk size.' > ../results/genes_data/opencv_performance_by_chunk_size
+echo 'Running opencv analysis of time vs chunk size.' > ../results/genes_data/opencv_performance_by_chunk_size
 echo 'Run with: python analysis.py -c 300 -v CAG ../Genes/Genes\ by\ Size/pow_10/*' >> ../results/genes_data/opencv_performance_by_chunk_size
 
-echo 'Getting analysis of time VS chunk_size on genes of size 2^10'
+echo 'Getting opencv analysis of time VS chunk_size on genes of size 2^10'
 python analysis.py -c 300 -v CAG ../Genes/Genes\ by\ Size/pow_10/* >> ../results/genes_data/opencv_performance_by_chunk_size
 
 python graph.py -c opencv ../results/genes_data/opencv_performance_by_chunk_size
+
+echo 'Running algorithm analysis of time vs size of texts.' > ../results/genes_data/opencv_performance_by_chunk_size
+echo 'Run with: python analysis.py -k CAG ../Genes/Genes\ by\ Size/pow_10/* ../Genes/Genes\ by\ Size/pow_10/* ../Genes/Genes\ by\ Size/pow_10/* ../Genes/Genes\ by\ Size/pow_10/* > ../results/genes_data/performance_by_k' >> ../results/genes_data/opencv_performance_by_chunk_size
+
+echo 'Getting opencv analysis of time VS chunk_size on genes of size 2^10'
+python analysis.py -k CAG ../Genes/Genes\ by\ Size/pow_10/* ../Genes/Genes\ by\ Size/pow_10/* ../Genes/Genes\ by\ Size/pow_10/* ../Genes/Genes\ by\ Size/pow_10/* > ../results/genes_data/performance_by_k
+
+python graph.py -k ../results/genes_data/performance_by_k 
