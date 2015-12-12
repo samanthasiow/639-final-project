@@ -85,9 +85,12 @@ def k_analysis(genomes):
     boyermoore_data = {'name': 'boyermoore'}
     nlogn_data = {'name': 'nlogn'}
     opencv_data = {'name': 'opencv'}
-    for i in range(1,len(genomes)):
+    for i in range(0,len(genomes)):
         analysis['k'] = i
-        k_genomes = genomes[:i]
+        if len(genomes[:i]) == 0:
+            k_genomes = [genomes[0]]
+        else:
+            k_genomes = genomes[:i]
         with Timer() as t:
             bm_matches = bm.boyer_moore_mult_match_index(k_genomes, args.pattern)
         boyermoore_data['time'] = t.msecs
@@ -201,7 +204,7 @@ total_length = 0
 # Scan files and store the title and genome string in genomes dictionary
 for genome_fn in args.genomes:
     with open(genome_fn) as gn:
-        # title = gn.readline()
+        title = gn.readline()
         genome = ''
         for line in gn:
             genome += line.rstrip()
