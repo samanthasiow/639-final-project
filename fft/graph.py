@@ -27,8 +27,8 @@ def plot_chunk_time(data, alg_name):
     chunk_size, alg_time = (list(t) for t in zip(*sorted(zip(chunk_size,alg_time))))
 
     if alg_name == "nlogm":
-        pyplot.plot(chunk_size, alg_time, label='n^2 logm')
-        title = 'Performance time of n^2 logm vs Length of \'chunks\' on text of length ' + str(text_length)
+        pyplot.plot(chunk_size, alg_time, label='nk logm')
+        title = 'Performance time of nk logm vs Length of \'chunks\' on text of length ' + str(text_length)
     else:
         pyplot.plot(chunk_size, alg_time, label='OpenCV')
         title = 'Performance time of OpenCV vs Length of \'chunks\' on text of length ' + str(text_length)
@@ -57,7 +57,7 @@ def plot_alg_time(data):
     pyplot.plot(text_length, time['boyermoore'], label='boyer moore')
     pyplot.plot(text_length, time['opencv'], label='opencv')
     pyplot.plot(text_length, time['nlogn'], label='nk lognk')
-    pyplot.plot(text_length, time['nlogm'],  label='n^2 logm',)
+    pyplot.plot(text_length, time['nlogm'],  label='nk logm',)
     pyplot.title('Time Performance of Algorithms vs Text Length')
 
     pyplot.legend(loc='upper left')
