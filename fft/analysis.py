@@ -97,7 +97,7 @@ def k_analysis(genomes):
         boyermoore_data['accuracy'] = 1
 
         with Timer() as t:
-            nlogn_matches = fft.fft_match_index_2d(k_genomes, args.pattern)
+            nlogn_matches = fft.fft_match_index_n_sq_log_n(k_genomes, args.pattern)
         nlogn_data['time'] = t.msecs
         accuracy = 0
 
@@ -136,7 +136,7 @@ def time_analysis(genomes, total_length, chunk_size='m'):
     boyermoore_data['accuracy'] = 1
 
     with Timer() as t:
-        nlogn_matches = fft.fft_match_index_2d(genomes, args.pattern)
+        nlogn_matches = fft.fft_match_index_n_sq_log_n(genomes, args.pattern)
     nlogn_data['time'] = t.msecs
     accuracy = 0
 
