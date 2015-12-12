@@ -5,7 +5,6 @@ Dependencies
 ------------
 * numpy `pip install numpy`
 * opencv (on mac, `brew tap homebrew/science` then `brew install opencv`)
-* swig (on mac, `brew install swig`)
 
 How to run
 ----------
