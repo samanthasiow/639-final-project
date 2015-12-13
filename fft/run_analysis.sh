@@ -41,7 +41,8 @@ python graph.py -c opencv ../results/genes_data/opencv_performance_by_chunk_size
 echo 'Running algorithm analysis of time vs size of texts.' > ../results/genes_data/opencv_performance_by_chunk_size
 echo 'Run with: python analysis.py -k CAG ../Genes/Genes\ by\ Size/pow_10/* ../Genes/Genes\ by\ Size/pow_10/* ../Genes/Genes\ by\ Size/pow_10/* ../Genes/Genes\ by\ Size/pow_10/* > ../results/genes_data/performance_by_k' >> ../results/genes_data/opencv_performance_by_chunk_size
 
-echo 'Running algorithm analysis of time vs size of text, of text length 2^10.'
+echo 'Running algorithm analysis of time vs size of text, of text length 2^10.' > ../results/genes_data/performance_by_k
+echo 'Run with: python analysis.py -k CAG ../Genes/Genes\ by\ Size/pow_10/* ../Genes/Genes\ by\ Size/pow_10/* ../Genes/Genes\ by\ Size/pow_10/* ../Genes/Genes\ by\ Size/pow_10/* > ../results/genes_data/performance_by_k' >> ../results/genes_data/performance_by_k
 python analysis.py -k CAG ../Genes/Genes\ by\ Size/pow_10/* ../Genes/Genes\ by\ Size/pow_10/* ../Genes/Genes\ by\ Size/pow_10/* ../Genes/Genes\ by\ Size/pow_10/* > ../results/genes_data/performance_by_k
 
 python graph.py -k ../results/genes_data/performance_by_k
