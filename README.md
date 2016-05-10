@@ -9,7 +9,7 @@ Dependencies
 How to run
 ----------
 
-Our code is in the fft directory
+Our code is in the fft directory:
 
     $ python cli.py
 
@@ -18,18 +18,18 @@ Our code is in the fft directory
 
     fftmatch.naive_string_match_index(text, pattern)
     fftmatch.fft_match_index_n_log_n(text, pattern)
-Naive 1-D FFT-based match-index algorithm
+Naive 1-D FFT-based match-index algorithm.
 
   fftmatch.fft_match_index_n_log_m(text, pattern)
-Most efficient 1-D FFT-based FFT-based match-index algorithm
+Most efficient 1-D FFT-based FFT-based match-index algorithm.
 
     boyermoore.boyer_moore_match_index(text, pattern)
-Used to benchmark all of our algorithms with
+Used to benchmark all of our algorithms with:
 
 ## Multiple genomes to single substring matching
 
     fftmatch.fft_match_index_n_sq_log_n(texts, pattern)
-Similar to the n log n 1-D algorithm
+Similar to the n log n 1-D algorithm.
 
     fftmatch.fft_match_index_n_sq_log_n\_naive(texts, pattern)
 This uses the 1-D algorithm on each text individually from a list of texts.
@@ -41,10 +41,10 @@ This breaks up the text into smaller chunks of size 2\*len(pattern) and does a
 
     cvmatch.cv_match_index(texts, pattern)
 
-This uses openCV's template-matching algorithm to solve the match index problem
+This uses openCV's template-matching algorithm to solve the match index problem.
 
     cvmatch.cv_match_index_chunk(texts, pattern)
-This uses openCV's template-matching algorithm on size 2\*len(pattern) chunks
+This uses openCV's template-matching algorithm on size 2\*len(pattern) partitions.
 
 # Benchmarking
 Run with:
