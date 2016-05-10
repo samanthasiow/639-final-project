@@ -13,7 +13,7 @@ Our code is in the fft directory
 
     $ python cli.py
 
-#algorithms that match a single genome to a single substring
+# Algorithms that match a single genome to a single substring
 
     fftmatch.naive_string_match_index(text, pattern)
     fftmatch.fft_match_index_n_log_n(text, pattern)
@@ -25,7 +25,7 @@ Most efficient 1-D FFT-based FFT-based match-index algorithm
     boyermoore.boyer_moore_match_index(text, pattern)
 Used to benchmark all of our algorithms with
 
-#algorithms that match multiple genomes to a single substring
+# Algorithms that match multiple genomes to a single substring
 
     fftmatch.fft_match_index_n_sq_log_n(texts, pattern)
 Similar to the n log n 1-D algorithm
